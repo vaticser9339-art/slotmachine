@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎰 经典老虎机</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Noto+Sans+SC:wght@300;400;700&display=swap');
+  :root {
+    --gold:#FFD700;--gold-dark:#B8860B;--gold-light:#FFF0A0;
+    --red:#FF2244;--bg-deep:#0A0608;--bg-panel:#1A1118;
+    --green-win:#00FF88;--neon-blue:#00CCFF;--text-dim:#776699;
+    --purple:#CC88FF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg-deep);color:#EEE;font-family:'Noto Sans SC',sans-serif;min-height:100vh;overflow-x:hidden}
+
+  /* ── LAYOUT: header / left / right ── */
+  .app{display:grid;grid-template-columns:1fr 400px;grid-template-rows:auto 1fr;min-height:100vh;max-width:1500px;margin:0 auto}
+  .header{grid-column:1/-1;text-align:center;padding:16px 40px 10px;border-bottom:1px solid rgba(255,215,0,0.15)}
+  .header h1{font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--gold-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.15em}
+  .header .subtitle{font-size:.7rem;color:var(--text-dim);letter-spacing:.3em;font-family:'Share Tech Mono',monospace;margin-top:3px}
+
+  /* ── LEFT COLUMN ── */
+  .game-area{padding:24px 16px 24px 32px;display:flex;flex-direction:column;align-items:center;gap:14px}
+
+  /* machine */
+  .machine{background:linear-gradient(160deg,#2A1A22,#0F080C);border:2px solid var(--gold-dark);border-radius:20px;padding:22px 28px 20px;box-shadow:0 0 60px rgba(180,100,0,.2),inset 0 1px 0 rgba(255,215,0,.3);width:100%;max-width:540px;position:relative}
+  .machine::before{content:'';position:absolute;top:-1px;left:20px;right:20px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+  .credit-display{display:flex;justify-content:space-between;gap:10px;margin-bottom:16px}
+  .display-panel{flex:1;background:#000;border:1px solid var(--gold-dark);border-radius:8px;padding:6px 12px;text-align:center}
+  .display-panel .label{font-size:.55rem;color:var(--gold-dark);letter-spacing:.2em;font-family:'Share Tech Mono',monospace;text-transform:uppercase}
+  .display-panel .value{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:700;color:var(--gold);text-shadow:0 0 10px rgba(255,215,0,.5)}
+  .display-panel.win .value{color:var(--green-win);text-shadow:0 0 12px rgba(0,255,136,.5)}
+
+  .reels-frame{background:#000;border:2px solid #1A1020;border-radius:12px;padding:8px;position:relative;overflow:hidden}
+  .win-line{position:absolute;top:50%;left:8px;right:8px;transform:translateY(-50%);height:2px;background:linear-gradient(90deg,transparent,rgba(255,50,50,.7),transparent);z-index:10;pointer-events:none}
+  .reels{display:flex;gap:6px}
+  .reel-wrap{flex:1;overflow:hidden;border-radius:8px;height:174px;background:#080408;border:1px solid #1A1020;position:relative}
+  .reel-wrap::before,.reel-wrap::after{content:'';position:absolute;left:0;right:0;height:48px;z-index:5;pointer-events:none}
+  .reel-wrap::before{top:0;background:linear-gradient(180deg,#000,transparent)}
+  .reel-wrap::after{bottom:0;background:linear-gradient(0deg,#000,transparent)}
+  .middle-highlight{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);height:60px;border-top:1px solid rgba(255,50,50,.25);border-bottom:1px solid rgba(255,50,50,.25);z-index:2;pointer-events:none}
+  .reel-strip{display:flex;flex-direction:column;will-change:transform}
+  .reel-cell{width:100%;height:58px;display:flex;align-items:center;justify-content:center;font-size:1.9rem;user-select:none;flex-shrink:0}
+
+  .controls{display:flex;align-items:center;gap:14px;margin-top:14px;justify-content:center}
+  .bet-control{display:flex;align-items:center;gap:7px}
+  .bet-control label{font-size:.65rem;color:var(--text-dim);letter-spacing:.15em;font-family:'Share Tech Mono',monospace}
+  .bet-btn{width:26px;height:26px;background:linear-gradient(145deg,#2A1A22,#180F18);border:1px solid var(--gold-dark);border-radius:6px;color:var(--gold);font-size:.95rem;cursor:pointer;transition:all .15s}
+  .bet-btn:hover{background:var(--gold-dark);color:#000}
+  .bet-display{font-family:'Orbitron',monospace;font-size:.95rem;color:var(--gold);min-width:34px;text-align:center}
+  .spin-btn{background:linear-gradient(145deg,#CC1122,#880011);border:none;border-radius:50px;padding:12px 44px;font-family:'Orbitron',monospace;font-size:.95rem;font-weight:700;color:#FFF;cursor:pointer;letter-spacing:.15em;box-shadow:0 4px 0 #550009,0 6px 20px rgba(200,0,30,.4);transition:all .12s;position:relative;top:0}
+  .spin-btn:hover{background:linear-gradient(145deg,#EE2233,#AA0011)}
+  .spin-btn:active{top:3px;box-shadow:0 1px 0 #550009}
+  .spin-btn:disabled{background:#333;box-shadow:none;color:#666;cursor:not-allowed;top:0}
+
+  /* test button */
+  .test-btn{background:rgba(180,80,255,.12);border:1px solid rgba(180,80,255,.4);border-radius:8px;padding:8px 16px;font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--purple);cursor:pointer;letter-spacing:.1em;transition:all .15s}
+  .test-btn:hover{background:rgba(180,80,255,.25)}
+
+  @keyframes winFlash{0%,100%{background:rgba(0,255,136,0)}50%{background:rgba(0,255,136,.07)}}
+  .machine.winning{animation:winFlash .4s ease 3}
+
+  .message-bar{width:100%;max-width:540px;padding:9px 18px;border-radius:10px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.8rem;letter-spacing:.08em;min-height:40px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.05);color:var(--text-dim);transition:all .3s}
+  .message-bar.win{background:rgba(0,80,40,.3);border-color:var(--green-win);color:var(--green-win);font-weight:700}
+  .message-bar.lose{background:rgba(80,0,20,.3);border-color:var(--red);color:var(--red)}
+
+  .wild-meter{width:100%;max-width:540px;display:flex;align-items:center;gap:10px;padding:7px 14px;background:rgba(0,0,0,.3);border:1px solid rgba(180,80,255,.2);border-radius:10px}
+  .wild-label{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:#776699;letter-spacing:.1em}
+  .wild-pips{display:flex;gap:6px}
+  .wild-pip{width:22px;height:22px;border-radius:50%;border:1px solid rgba(180,80,255,.3);background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .3s}
+  .wild-pip.filled{background:rgba(180,80,255,.3);border-color:rgba(180,80,255,.8);box-shadow:0 0 10px rgba(180,80,255,.4)}
+  .wild-hint{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:#554;margin-left:auto}
+
+  .paytable{width:100%;max-width:540px;background:rgba(0,0,0,.3);border:1px solid rgba(255,215,0,.1);border-radius:12px;padding:12px 16px}
+  .paytable h3{font-family:'Orbitron',monospace;font-size:.6rem;color:var(--gold-dark);letter-spacing:.3em;margin-bottom:10px}
+  .paytable-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .pay-row{display:flex;align-items:center;gap:7px;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.03)}
+  .pay-symbols{font-size:.95rem;letter-spacing:2px}
+  .pay-multi{margin-left:auto;font-family:'Orbitron',monospace;font-size:.7rem;color:var(--gold)}
+
+  /* ── MECHANICS (left col, below paytable) ── */
+  .mechanics-card{width:100%;max-width:540px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:14px 18px}
+  .mechanics-card h3{font-family:'Orbitron',monospace;font-size:.6rem;color:var(--gold-dark);letter-spacing:.3em;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,215,0,.08)}
+  .mech-block{margin-bottom:12px}
+  .mech-title{font-family:'Orbitron',monospace;font-size:.58rem;color:#998;letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px}
+  .mech-text{font-size:.7rem;color:#887;line-height:1.7}
+  .rtp-bar-wrap{background:#0A0810;border-radius:4px;height:7px;overflow:hidden;margin-top:5px}
+  .rtp-bar-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold),var(--green-win));border-radius:4px;transition:width .5s}
+  .jackpot-bar{height:5px;background:#0A0810;border-radius:3px;overflow:hidden;margin-top:5px}
+  .jackpot-fill{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold));border-radius:3px;transition:width .3s}
+
+  /* ── RIGHT COLUMN ── */
+  .right-panel{border-left:1px solid rgba(255,215,0,.1);background:rgba(10,6,12,.8);overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:14px}
+  .right-panel::-webkit-scrollbar{width:4px}
+  .right-panel::-webkit-scrollbar-thumb{background:rgba(255,215,0,.2);border-radius:2px}
+  .panel-section{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px}
+  .panel-section h3{font-family:'Orbitron',monospace;font-size:.58rem;color:var(--gold-dark);letter-spacing:.3em;text-transform:uppercase;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid rgba(255,215,0,.08)}
+
+  /* sliders */
+  .param-row{margin-bottom:11px}
+  .param-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+  .param-name{font-size:.7rem;color:#AAA;font-family:'Share Tech Mono',monospace}
+  .param-value{font-family:'Orbitron',monospace;font-size:.75rem;color:var(--neon-blue)}
+  input[type="range"]{width:100%;height:4px;-webkit-appearance:none;background:linear-gradient(90deg,var(--neon-blue) var(--pct,50%),#2A2030 var(--pct,50%));border-radius:2px;outline:none;cursor:pointer}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;background:var(--neon-blue);border-radius:50%;box-shadow:0 0 7px rgba(0,200,255,.6)}
+
+  /* mult input row */
+  .mult-row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px;margin-bottom:7px;font-size:.7rem}
+  .mult-sym{font-size:1rem;text-align:center}
+  .mult-input{background:#0A0810;border:1px solid #2A2030;border-radius:6px;color:var(--gold);font-family:'Orbitron',monospace;font-size:.75rem;padding:3px 7px;width:70px;text-align:right}
+  .mult-input:focus{outline:none;border-color:var(--gold-dark)}
+  .mult-prob{color:#554;font-family:'Share Tech Mono',monospace;font-size:.65rem;text-align:right}
+
+  /* prob table */
+  .prob-grid{display:grid;grid-template-columns:auto 1fr auto auto;gap:4px 10px;font-size:.67rem;font-family:'Share Tech Mono',monospace}
+  .col-h{color:var(--gold-dark);font-size:.57rem;letter-spacing:.1em;padding-bottom:3px;border-bottom:1px solid rgba(255,215,0,.08)}
+  .sym{color:#CCC}.prob{color:var(--neon-blue);text-align:right}.mult-d{color:var(--gold);text-align:right}.contrib{color:#887;text-align:right}
+
+  /* stats */
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .stat-box{background:rgba(0,0,0,.3);border-radius:8px;padding:7px 10px;text-align:center}
+  .stat-label{font-size:.58rem;color:var(--text-dim);font-family:'Share Tech Mono',monospace;letter-spacing:.1em}
+  .stat-value{font-family:'Orbitron',monospace;font-size:.85rem;color:#EEE;margin-top:2px}
+  .stat-value.good{color:var(--green-win)}.stat-value.bad{color:var(--red)}
+
+  /* rng */
+  .rng-viz{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap}
+  .rng-bit{width:7px;height:7px;border-radius:2px;background:#1A1020;transition:background .1s}
+  .rng-bit.active{background:var(--neon-blue)}
+
+  /* toggles */
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+  .toggle-label{font-size:.7rem;color:#AAA;font-family:'Share Tech Mono',monospace}
+  .toggle{width:34px;height:18px;background:#2A2030;border-radius:9px;position:relative;cursor:pointer;border:1px solid #444;transition:background .2s}
+  .toggle.on{background:var(--neon-blue);border-color:var(--neon-blue)}
+  .toggle::after{content:'';width:12px;height:12px;background:#FFF;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .2s}
+  .toggle.on::after{left:18px}
+
+  /* history */
+  .history-log{max-height:90px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:.63rem;color:#665;line-height:1.8}
+  .history-log .win-entry{color:var(--green-win)}.history-log .lose-entry{color:#443}
+
+  /* ── SORT PUZZLE OVERLAY ── */
+  #sort-overlay{display:none;position:fixed;inset:0;background:rgba(5,2,8,.92);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+  #sort-overlay.active{display:flex}
+  .sort-modal{background:linear-gradient(160deg,#1A0F20,#0D0810);border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:24px 28px;width:500px;max-width:96vw;box-shadow:0 0 80px rgba(180,80,255,.2)}
+  .sort-header{text-align:center;margin-bottom:16px}
+  .sort-header h2{font-family:'Orbitron',monospace;font-size:1.1rem;color:var(--purple);letter-spacing:.2em;margin-bottom:3px}
+  .sort-header p{font-size:.72rem;color:#776699;font-family:'Share Tech Mono',monospace}
+  .sort-tubes{display:flex;gap:9px;justify-content:center;margin:14px 0;flex-wrap:wrap}
+  .tube{width:46px;display:flex;flex-direction:column-reverse;gap:3px;padding:5px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:0 0 23px 23px;border-top:none;cursor:pointer;transition:border-color .15s,box-shadow .15s;min-height:174px;position:relative;align-items:center}
+  .tube::before{content:'';position:absolute;top:-7px;left:4px;right:4px;height:7px;border:1px solid rgba(255,255,255,.1);border-bottom:none;border-radius:4px 4px 0 0}
+  .tube.selected{border-color:rgba(200,150,255,.8);box-shadow:0 0 16px rgba(180,80,255,.4)}
+  .tube.valid-target{border-color:rgba(0,255,136,.6)}
+  .ball{width:34px;height:34px;border-radius:50%;flex-shrink:0;position:relative;transition:transform .1s}
+  .ball::after{content:'';position:absolute;top:5px;left:7px;width:9px;height:5px;background:rgba(255,255,255,.3);border-radius:50%;transform:rotate(-35deg)}
+  .sort-info{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}
+  .sort-moves{font-family:'Orbitron',monospace;font-size:.82rem;color:var(--purple)}
+  .sort-prize{font-family:'Orbitron',monospace;font-size:.82rem;color:var(--gold)}
+  .sort-btns{display:flex;gap:7px;margin-top:12px}
+  .sort-btn{flex:1;padding:9px;border-radius:9px;font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.1em;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#AAA;transition:all .15s}
+  .sort-btn:hover{background:rgba(255,255,255,.08);color:#EEE}
+  .sort-btn.primary{background:rgba(180,80,255,.15);border-color:rgba(180,80,255,.4);color:var(--purple)}
+  .sort-btn.primary:hover{background:rgba(180,80,255,.25)}
+  .sort-result{text-align:center;margin-top:10px;font-family:'Orbitron',monospace;font-size:.88rem;min-height:22px;color:var(--green-win)}
+
+  @media(max-width:900px){.app{grid-template-columns:1fr}.right-panel{border-left:none;border-top:1px solid rgba(255,215,0,.1)}.header h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<header class="header">
+  <h1>🎰 FORTUNE REEL</h1>
+  <div class="subtitle">Classic Slot Machine · 经典老虎机</div>
+</header>
+
+<!-- LEFT: GAME + MECHANICS -->
+<main class="game-area">
+
+  <div class="machine" id="machine">
+    <div class="credit-display">
+      <div class="display-panel">
+        <div class="label">CREDITS</div>
+        <div class="value" id="credits">1000</div>
+      </div>
+      <div class="display-panel win">
+        <div class="label">WIN</div>
+        <div class="value" id="win-display">0</div>
+      </div>
+      <div class="display-panel">
+        <div class="label">JACKPOT</div>
+        <div class="value" id="jackpot-display" style="color:#FFD700">2500</div>
+      </div>
+    </div>
+    <div class="reels-frame">
+      <div class="win-line"></div>
+      <div class="reels" id="reels">
+        <div class="reel-wrap" id="reel0"><div class="middle-highlight"></div><div class="reel-strip" id="strip0"></div></div>
+        <div class="reel-wrap" id="reel1"><div class="middle-highlight"></div><div class="reel-strip" id="strip1"></div></div>
+        <div class="reel-wrap" id="reel2"><div class="middle-highlight"></div><div class="reel-strip" id="strip2"></div></div>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="bet-control">
+        <label>BET</label>
+        <button class="bet-btn" id="bet-down">−</button>
+        <div class="bet-display" id="bet-val">10</div>
+        <button class="bet-btn" id="bet-up">＋</button>
+      </div>
+      <button class="spin-btn" id="spin-btn">SPIN</button>
+      <button class="test-btn" onclick="openSortPuzzle()">🧪 测试关卡</button>
+    </div>
+  </div>
+
+  <div class="message-bar" id="msg-bar">拉动摇杆，挑战命运！</div>
+
+  <div class="wild-meter">
+    <span class="wild-label">🃏 WILD</span>
+    <div class="wild-pips">
+      <div class="wild-pip" id="wpip0"></div>
+      <div class="wild-pip" id="wpip1"></div>
+      <div class="wild-pip" id="wpip2"></div>
+    </div>
+    <span class="wild-hint">三Wild同时出现 → 解谜关卡 → 赢代币</span>
+  </div>
+
+  <div class="paytable">
+    <h3>💰 赔付表 · Paytable</h3>
+    <div class="paytable-grid" id="paytable-grid"></div>
+  </div>
+
+  <!-- MECHANICS moved here, below paytable -->
+  <div class="mechanics-card">
+    <h3>🔬 工作原理</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px">
+      <div class="mech-block">
+        <div class="mech-title">RNG · 随机数生成器</div>
+        <div class="mech-text">每次旋转为每个滚轮独立生成随机数，映射到符号位置。结果在「旋转」瞬间已确定，动画只是视觉呈现。</div>
+      </div>
+      <div class="mech-block">
+        <div class="mech-title">符号权重</div>
+        <div class="mech-text">每个符号在虚拟滚轮上占的格数不同。格数越多越容易出现，权重之比即为出现概率之比。</div>
+      </div>
+      <div class="mech-block">
+        <div class="mech-title">RTP · 返还率</div>
+        <div class="mech-text">理论RTP = Σ(三连概率 × 倍数)。调整权重或倍数后实时重算。</div>
+        <div class="rtp-bar-wrap"><div class="rtp-bar-fill" id="rtp-bar" style="width:96%"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:.58rem;color:#554;font-family:'Share Tech Mono',monospace">
+          <span>玩家</span><span id="rtp-label">RTP 96%</span><span id="house-edge">庄家 4%</span>
+        </div>
+      </div>
+      <div class="mech-block">
+        <div class="mech-title">Wild 万能牌</div>
+        <div class="mech-text">🃏可替代任意符号。两Wild+一普通 = 三连。三Wild触发Sort Puzzle奖励关卡。</div>
+        <div class="mech-title" style="margin-top:8px">Jackpot · 奖池</div>
+        <div class="jackpot-bar"><div class="jackpot-fill" id="jackpot-bar" style="width:25%"></div></div>
+        <div style="font-size:.58rem;color:#554;font-family:'Share Tech Mono',monospace;margin-top:3px" id="jackpot-progress">奖池: 2500</div>
+      </div>
+      <div class="mech-block" style="grid-column:1/-1">
+        <div class="mech-title">⚠️ 赌徒谬误</div>
+        <div class="mech-text">每次旋转完全独立——前一次结果对下一次<strong style="color:#FF4466">毫无影响</strong>。PRNG对历史没有记忆，"连败必赢"是认知偏误。</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- RIGHT: PARAMS + PROB + STATS -->
+<aside class="right-panel">
+
+  <!-- ── 概率表 ── -->
+  <div class="panel-section">
+    <h3>📊 概率 · 期望</h3>
+    <div class="prob-grid" id="prob-grid">
+      <div class="col-h">符号</div><div class="col-h" style="text-align:right">三连概率</div><div class="col-h" style="text-align:right">倍数</div><div class="col-h" style="text-align:right">RTP贡献</div>
+    </div>
+    <div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,215,0,.08);font-family:'Share Tech Mono',monospace;font-size:.67rem">
+      <div style="display:flex;justify-content:space-between">
+        <span style="color:#776699">理论RTP</span>
+        <span style="color:var(--green-win);font-family:'Orbitron',monospace" id="rtp-total">--%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px">
+        <span style="color:#776699">Wild期望贡献</span>
+        <span style="color:var(--purple)" id="wild-contrib">--%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 倍数调节 ── -->
+  <div class="panel-section">
+    <h3>🎚️ 倍数调节</h3>
+    <div style="font-size:.62rem;color:#554;font-family:'Share Tech Mono',monospace;margin-bottom:8px">手动输入各符号三连倍数 → RTP自动重算</div>
+    <div id="mult-inputs"></div>
+  </div>
+
+  <!-- ── 权重调节 ── -->
+  <div class="panel-section">
+    <h3>⚙️ 权重调节</h3>
+    <div style="font-size:.62rem;color:#554;font-family:'Share Tech Mono',monospace;margin-bottom:8px">权重变化 → 概率变化 → RTP自动重算</div>
+
+    <div class="param-row">
+      <div class="param-label"><span class="param-name">理论目标RTP</span><span class="param-value" id="rtp-val">96%</span></div>
+      <input type="range" id="rtp-slider" min="50" max="99" value="96" step="1">
+    </div>
+
+    <div id="weight-sliders"></div>
+
+    <div class="param-row" style="margin-top:4px">
+      <div class="param-label"><span class="param-name">🃏 Wild 权重（独立）</span><span class="param-value" id="w-wild">2</span></div>
+      <input type="range" id="w-wild-s" min="0" max="8" value="2" step="1">
+    </div>
+    <div class="param-row">
+      <div class="param-label"><span class="param-name">滚轮密度</span><span class="param-value" id="reel-len-val">20</span></div>
+      <input type="range" id="reel-len-s" min="10" max="50" value="20" step="1">
+    </div>
+    <div class="param-row">
+      <div class="param-label"><span class="param-name">初始代币</span><span class="param-value" id="init-credits-val">1000</span></div>
+      <input type="range" id="init-credits-s" min="100" max="5000" value="1000" step="100">
+    </div>
+
+    <div class="toggle-row"><span class="toggle-label">显示RNG过程</span><div class="toggle on" id="toggle-rng"></div></div>
+    <div class="toggle-row"><span class="toggle-label">自动旋转</span><div class="toggle" id="toggle-auto"></div></div>
+
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button onclick="resetGame()" style="flex:1;padding:7px;background:rgba(255,215,0,.07);border:1px solid var(--gold-dark);border-radius:8px;color:var(--gold);font-family:'Share Tech Mono',monospace;font-size:.7rem;cursor:pointer">↺ 重置</button>
+    </div>
+  </div>
+
+  <!-- ── 本局统计 ── -->
+  <div class="panel-section">
+    <h3>📈 本局统计</h3>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-label">总旋转</div><div class="stat-value" id="s-spins">0</div></div>
+      <div class="stat-box"><div class="stat-label">胜率</div><div class="stat-value" id="s-winrate">-%</div></div>
+      <div class="stat-box"><div class="stat-label">实际RTP</div><div class="stat-value" id="s-rtp">-%</div></div>
+      <div class="stat-box"><div class="stat-label">盈亏</div><div class="stat-value" id="s-pnl">0</div></div>
+    </div>
+  </div>
+
+  <!-- ── RNG 可视化 ── -->
+  <div class="panel-section" id="rng-section">
+    <h3>🎲 RNG 过程</h3>
+    <div class="rng-viz" id="rng-viz"></div>
+    <div style="margin-top:6px;font-size:.63rem;color:#554;font-family:'Share Tech Mono',monospace" id="rng-result"></div>
+  </div>
+
+  <!-- ── 历史 ── -->
+  <div class="panel-section">
+    <h3>📜 历史记录</h3>
+    <div class="history-log" id="history-log"><div style="color:#443">--- 开始游戏 ---</div></div>
+  </div>
+
+</aside>
+</div>
+
+<!-- SORT PUZZLE OVERLAY -->
+<div id="sort-overlay">
+  <div class="sort-modal">
+    <div class="sort-header">
+      <h2>🃏 WILD BONUS · 颜色分类</h2>
+      <p>将每管球按颜色分类完毕 · 剩余步数越多奖励越高</p>
+    </div>
+    <div class="sort-tubes" id="sort-tubes"></div>
+    <div class="sort-info">
+      <div class="sort-moves">步数剩余: <span id="sort-moves-left">20</span></div>
+      <div class="sort-prize">奖励: <span id="sort-prize-val">0</span> 代币</div>
+    </div>
+    <div class="sort-result" id="sort-result"></div>
+    <div class="sort-btns">
+      <button class="sort-btn" onclick="sortUndo()">↩ 撤销</button>
+      <button class="sort-btn" onclick="sortReset()">↺ 重置</button>
+      <button class="sort-btn primary" onclick="sortSkip()">跳过 →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// SYMBOLS  (index 7 = Wild, handled separately)
+// ════════════════════════════════════════════
+const SYMBOLS = [
+  { emoji:'🍒', name:'Cherry',  baseRatio:1   },
+  { emoji:'⬜', name:'Empty1',  baseRatio:0   }, // empty slot between Cherry & Bell
+  { emoji:'🔔', name:'Bell',    baseRatio:2.5 },
+  { emoji:'🍋', name:'Lemon',   baseRatio:1.5 },
+  { emoji:'⬜', name:'Empty2',  baseRatio:0   }, // empty slot between Lemon & Star
+  { emoji:'⭐', name:'Star',    baseRatio:5   },
+  { emoji:'🍇', name:'Grape',   baseRatio:2   },
+  { emoji:'💎', name:'Diamond', baseRatio:10  },
+  { emoji:'7️⃣', name:'Seven',  baseRatio:50  },
+  { emoji:'🃏', name:'Wild',    baseRatio:0   },
+];
+// Normal symbol indices (exclude Empty and Wild)
+const NORMAL_INDICES = [0,2,3,5,6,7,8]; // Cherry,Bell,Lemon,Star,Grape,Diamond,Seven
+const EMPTY_INDICES  = [1,4];            // Empty1, Empty2
+const WILD_IDX = 9;
+const N_NORMAL = NORMAL_INDICES.length;
+
+// Dynamic multipliers — parallel array to NORMAL_INDICES
+// mults[k] corresponds to NORMAL_INDICES[k]: Cherry,Bell,Lemon,Star,Grape,Diamond,Seven
+let mults = [2, 5, 3, 10, 4, 20, 100];
+
+// weights[k] corresponds to NORMAL_INDICES[k]
+let weights = [8, 6, 7, 4, 6, 3, 2];   // friendlier defaults
+
+// Empty slot weights (adjustable, per empty slot index in EMPTY_INDICES)
+let emptyWeights = [0, 0];  // default 0 — user adjusts via slider
+
+let WILD_WEIGHT_VAL = 3;
+
+// Game state
+let credits = 1000, bet = 10, spinning = false;
+let autoSpin = false, autoTimer = null, showRNG = true;
+let stats = { spins:0, wins:0, totalBet:0, totalWon:0 };
+let jackpot = 2500, jackpotSeed = 1000;
+let reelLength = 20;
+let reelStrips = [[],[],[]];
+
+// ════════════════════════════════════════════
+// RTP MATH — includes Wild contribution
+// ════════════════════════════════════════════
+function totalWeightSum() {
+  return weights.reduce((a,b)=>a+b,0)
+    + emptyWeights.reduce((a,b)=>a+b,0)
+    + WILD_WEIGHT_VAL;
+}
+
+function calcTheoreticalRTP() {
+  const totalW = totalWeightSum();
+  const pw = WILD_WEIGHT_VAL / totalW;
+  let rtp = 0;
+  for (let k = 0; k < N_NORMAL; k++) {
+    const p = weights[k] / totalW;
+    rtp += p*p*p * mults[k];
+    rtp += 2 * p*p * (1-p) * mults[k] * 0.3;  // two-of-a-kind
+    rtp += 3 * p*p * pw * mults[k];             // 2 normal + 1 wild
+    rtp += 3 * p * pw*pw * mults[k];            // 1 normal + 2 wild
+  }
+  return rtp;
+}
+
+function calcWildContribRTP() {
+  const totalW = totalWeightSum();
+  const pw = WILD_WEIGHT_VAL / totalW;
+  let contrib = 0;
+  for (let k = 0; k < N_NORMAL; k++) {
+    const p = weights[k] / totalW;
+    contrib += 3 * p*p * pw * mults[k];
+    contrib += 3 * p * pw*pw * mults[k];
+  }
+  return contrib;
+}
+
+// Wild期望单次获得代币 (基于当前bet)
+function calcWildExpectedCoins() {
+  const totalW = totalWeightSum();
+  const pw = WILD_WEIGHT_VAL / totalW;
+  let ev = 0;
+  for (let k = 0; k < N_NORMAL; k++) {
+    const p = weights[k] / totalW;
+    ev += (3*p*p*pw + 3*p*pw*pw) * mults[k] * bet;
+  }
+  return ev; // 每次旋转Wild辅助带来的期望代币数
+}
+
+function recalcMultipliers(targetRTP) {
+  const cur = calcTheoreticalRTP();
+  if (cur <= 0) return;
+  const scale = targetRTP / cur;
+  mults = mults.map(m => Math.max(1, Math.round(m * scale * 10) / 10));
+}
+
+function onWeightChange() {
+  const ids = ['w-cherry-s','w-bell-s','w-lemon-s','w-star-s','w-grape-s','w-diamond-s','w-seven-s'];
+  weights = ids.map(id => +document.getElementById(id).value);
+  emptyWeights[0] = +(document.getElementById('w-empty1-s')||{value:0}).value;
+  emptyWeights[1] = +(document.getElementById('w-empty2-s')||{value:0}).value;
+  const target = +document.getElementById('rtp-slider').value / 100;
+  recalcMultipliers(target);
+  rebuildAll();
+}
+
+function onRTPChange() {
+  recalcMultipliers(+document.getElementById('rtp-slider').value / 100);
+  rebuildAll();
+}
+
+// Called when user edits a mult input directly
+function onMultInput(i, val) {
+  const v = parseFloat(val);
+  if (!isNaN(v) && v >= 1) { mults[i] = v; }
+  updateRTPDisplay();
+  renderProbGrid();
+  renderPaytable();
+}
+
+function rebuildAll() {
+  initReelDOM();
+  renderPaytable();
+  renderProbGrid();
+  renderMultInputs();
+  updateRTPDisplay();
+}
+
+// ════════════════════════════════════════════
+// REEL DOM
+// ════════════════════════════════════════════
+function buildReelStrip() {
+  const strip = [];
+  // Normal symbols
+  for (let k = 0; k < N_NORMAL; k++)
+    for (let w = 0; w < weights[k]; w++) strip.push(NORMAL_INDICES[k]);
+  // Empty slots
+  for (let e = 0; e < EMPTY_INDICES.length; e++)
+    for (let w = 0; w < emptyWeights[e]; w++) strip.push(EMPTY_INDICES[e]);
+  // Wild
+  for (let w = 0; w < WILD_WEIGHT_VAL; w++) strip.push(WILD_IDX);
+  // shuffle
+  for (let i = strip.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [strip[i],strip[j]]=[strip[j],strip[i]];
+  }
+  while (strip.length < reelLength) {
+    const ex=[...strip];
+    strip.push(...ex.slice(0, reelLength-strip.length));
+  }
+  return strip.slice(0, reelLength);
+}
+
+function initReelDOM() {
+  for (let r = 0; r < 3; r++) {
+    reelStrips[r] = buildReelStrip();
+    const strip = document.getElementById(`strip${r}`);
+    strip.innerHTML = '';
+    [...reelStrips[r],...reelStrips[r],...reelStrips[r]].forEach(si => {
+      const d = document.createElement('div');
+      d.className = 'reel-cell';
+      d.textContent = SYMBOLS[si].emoji;
+      strip.appendChild(d);
+    });
+    strip.style.transform = `translateY(-${reelStrips[r].length*58}px)`;
+  }
+}
+
+// ════════════════════════════════════════════
+// PAYTABLE
+// ════════════════════════════════════════════
+function renderPaytable() {
+  const grid = document.getElementById('paytable-grid');
+  grid.innerHTML = '';
+  // Wild special row
+  const wr = document.createElement('div');
+  wr.className='pay-row';
+  wr.style.cssText='background:rgba(180,80,255,.08);border:1px solid rgba(180,80,255,.2)';
+  wr.innerHTML=`<span class="pay-symbols">🃏🃏🃏</span><span class="pay-multi" style="color:var(--purple)">PUZZLE!</span>`;
+  grid.appendChild(wr);
+  for (let k = N_NORMAL-1; k >= 0; k--) {
+    const si = NORMAL_INDICES[k];
+    const row = document.createElement('div');
+    row.className='pay-row';
+    const m = mults[k];
+    const md = m>=10 ? Math.round(m) : m.toFixed(1);
+    row.innerHTML=`<span class="pay-symbols">${SYMBOLS[si].emoji}${SYMBOLS[si].emoji}${SYMBOLS[si].emoji}</span><span class="pay-multi">×${md}</span>`;
+    grid.appendChild(row);
+  }
+}
+
+// ════════════════════════════════════════════
+// PROB GRID — includes Wild rows
+// ════════════════════════════════════════════
+function renderProbGrid() {
+  const grid = document.getElementById('prob-grid');
+  grid.innerHTML = `<div class="col-h">符号</div><div class="col-h" style="text-align:right">三连概率</div><div class="col-h" style="text-align:right">倍数</div><div class="col-h" style="text-align:right">RTP贡献</div>`;
+  const totalW  = totalWeightSum();
+  const pw = WILD_WEIGHT_VAL / totalW;
+
+  for (let k = 0; k < N_NORMAL; k++) {
+    const si = NORMAL_INDICES[k];
+    const p = weights[k]/totalW;
+    const p3pure = p*p*p;
+    const p3wild = 3*p*p*pw + 3*p*pw*pw;
+    const p3total = p3pure + p3wild;
+    const contrib = p3total * mults[k];
+    const md = mults[k]>=10 ? Math.round(mults[k]) : mults[k].toFixed(1);
+    const expectedCoins = (p3total * mults[k] * bet).toFixed(1);
+    grid.innerHTML += `
+      <div class="sym">${SYMBOLS[si].emoji} ${SYMBOLS[si].name}</div>
+      <div class="prob">${(p3total*100).toFixed(3)}%</div>
+      <div class="mult-d">×${md}</div>
+      <div class="contrib">${(contrib*100).toFixed(2)}%</div>`;
+  }
+  // Empty slot rows
+  const totalW2 = totalWeightSum();
+  EMPTY_INDICES.forEach((ei,e)=>{
+    const ew = emptyWeights[e];
+    if (ew <= 0) return;
+    const pe = ew / totalW2;
+    grid.innerHTML += `
+      <div class="sym" style="color:#443">⬜ 空格${e+1}</div>
+      <div class="prob" style="color:#443">${(pe*100).toFixed(1)}%</div>
+      <div class="mult-d" style="color:#443">×0</div>
+      <div class="contrib" style="color:#443">-${(pe*100).toFixed(2)}%</div>`;
+  });
+
+  // Wild row
+  const totalW3 = totalWeightSum();
+  const pw2 = WILD_WEIGHT_VAL / totalW3;
+  const p3w = pw2*pw2*pw2;
+  const wildEV = calcWildExpectedCoins();
+  grid.innerHTML += `
+    <div class="sym" style="color:var(--purple)">🃏 Wild</div>
+    <div class="prob" style="color:var(--purple)">${(pw2*100).toFixed(1)}%<span style="font-size:.55em;color:#554"> (×3:${(p3w*100).toFixed(4)}%)</span></div>
+    <div class="mult-d" style="color:var(--purple)">PUZZLE</div>
+    <div class="contrib" style="color:var(--purple)">+${wildEV.toFixed(1)}币/转</div>`;
+
+  // totals
+  const totalRTP = calcTheoreticalRTP()*100;
+  const wildC    = calcWildContribRTP()*100;
+  document.getElementById('rtp-total').textContent   = totalRTP.toFixed(1)+'%';
+  document.getElementById('wild-contrib').textContent = wildC.toFixed(2)+'%';
+}
+
+// ════════════════════════════════════════════
+// MULT INPUT ROWS (editable)
+// ════════════════════════════════════════════
+function renderMultInputs() {
+  const container = document.getElementById('mult-inputs');
+  const totalW  = totalWeightSum();
+  container.innerHTML = '';
+  for (let k = 0; k < N_NORMAL; k++) {
+    const si = NORMAL_INDICES[k];
+    const p = weights[k]/totalW;
+    const pw = WILD_WEIGHT_VAL/totalW;
+    const p3total = p*p*p + 3*p*p*pw + 3*p*pw*pw;
+    const expectedCoins = (p3total * mults[k] * bet).toFixed(1);
+    const row = document.createElement('div');
+    row.className = 'mult-row';
+    row.innerHTML = `
+      <div class="mult-sym">${SYMBOLS[si].emoji}</div>
+      <input class="mult-input" type="number" min="1" step="0.5" value="${mults[k]>=10?Math.round(mults[k]):mults[k].toFixed(1)}" onchange="onMultInput(${k},this.value)" oninput="onMultInput(${k},this.value)">
+      <div class="mult-prob">≈${expectedCoins}币/转</div>`;
+    container.appendChild(row);
+  }
+}
+
+// ════════════════════════════════════════════
+// RTP DISPLAY
+// ════════════════════════════════════════════
+function updateRTPDisplay() {
+  const rtp = calcTheoreticalRTP()*100;
+  const rtpRound = Math.min(Math.max(Math.round(rtp),50),99);
+  const slider = document.getElementById('rtp-slider');
+  slider.value = rtpRound;
+  const pct = ((rtpRound-50)/49*100).toFixed(1)+'%';
+  slider.style.setProperty('--pct', pct);
+  document.getElementById('rtp-val').textContent   = rtp.toFixed(1)+'%';
+  document.getElementById('rtp-bar').style.width   = Math.min(rtp,100)+'%';
+  document.getElementById('rtp-label').textContent = `RTP ${rtp.toFixed(1)}%`;
+  document.getElementById('house-edge').textContent = `庄家 ${(100-rtp).toFixed(1)}%`;
+}
+
+// ════════════════════════════════════════════
+// SPIN
+// ════════════════════════════════════════════
+function spin() {
+  if (spinning || credits < bet) return;
+  credits -= bet; stats.spins++; stats.totalBet += bet;
+  jackpot += Math.floor(bet*0.01); jackpotSeed++;
+  updateDisplay(); setMessage('...','');
+  document.getElementById('win-display').textContent = '0';
+  spinning = true;
+  document.getElementById('spin-btn').disabled = true;
+  document.getElementById('machine').classList.remove('winning');
+  const results = [pickSymbol(), pickSymbol(), pickSymbol()];
+  if (showRNG) animateRNG(results);
+  Promise.all(results.map((si,r)=>animateReel(r,si))).then(()=>{
+    finishSpin(results, calcWin(results));
+  });
+}
+
+function pickSymbol() {
+  const totalW = totalWeightSum();
+  let rand = Math.random()*totalW;
+  // Normal symbols
+  for (let k = 0; k < N_NORMAL; k++) {
+    rand -= weights[k];
+    if (rand <= 0) return NORMAL_INDICES[k];
+  }
+  // Empty slots
+  for (let e = 0; e < EMPTY_INDICES.length; e++) {
+    rand -= emptyWeights[e];
+    if (rand <= 0) return EMPTY_INDICES[e];
+  }
+  // Wild (or if rounding lands here for empty=0)
+  return WILD_IDX;
+}
+
+function isEmptySlot(idx) { return EMPTY_INDICES.includes(idx); }
+function normalK(symbolIdx) { return NORMAL_INDICES.indexOf(symbolIdx); } // k index in mults/weights
+
+function calcWin(results) {
+  const wilds = results.filter(r=>r===WILD_IDX).length;
+  if (wilds === 3) return { amount:0, wildBonus:true };
+  // Empty slots on the line = no win possible
+  const hasEmpty = results.some(r=>isEmptySlot(r));
+  if (hasEmpty) return null;
+  // Resolve wilds
+  const normals = results.filter(r=>r!==WILD_IDX && !isEmptySlot(r));
+  if (normals.length === 0) return null;
+  const effective = results.map(r => (r===WILD_IDX) ? normals[0] : r);
+  if (effective[0]===effective[1] && effective[1]===effective[2]) {
+    const si = effective[0];
+    const k = normalK(si);
+    if (k < 0) return null;
+    if (si === 8) { // Seven (NORMAL_INDICES[6]=8) = Jackpot
+      const prize = jackpot; jackpot=Math.floor(jackpotSeed*.5); jackpotSeed=1000;
+      return { amount:prize, jackpot:true, symbol:SYMBOLS[si], hadWild:wilds>0 };
+    }
+    const amt = isFinite(mults[k]) ? Math.round(bet*mults[k]) : 0;
+    return { amount:amt, jackpot:false, symbol:SYMBOLS[si], hadWild:wilds>0 };
+  }
+  if (effective[0]===effective[1] || effective[1]===effective[2]) {
+    const si = effective[0]===effective[1] ? effective[0] : effective[1];
+    const k = normalK(si);
+    if (k < 0) return null;
+    const amt = isFinite(mults[k]) ? Math.round(bet*mults[k]*0.3) : 0;
+    return { amount:amt, jackpot:false, symbol:SYMBOLS[si], partial:true, hadWild:wilds>0 };
+  }
+  return null;
+}
+
+// ════════════════════════════════════════════
+// REEL ANIMATION
+// ════════════════════════════════════════════
+function animateReel(reelIdx, targetSymbol) {
+  return new Promise(resolve=>{
+    const strip  = document.getElementById(`strip${reelIdx}`);
+    const sLen   = reelStrips[reelIdx].length;
+    const cellH  = 58;
+    const pos    = reelStrips[reelIdx].indexOf(targetSymbol);
+    const target = pos>=0 ? pos : 0;
+    const minSp  = 15+reelIdx*8+Math.floor(Math.random()*8);
+    const totalPx= (minSp+target)*cellH + sLen*cellH;
+    const dur    = 800+reelIdx*200+Math.random()*300;
+    const t0     = performance.now();
+    const off0   = sLen*cellH;
+    const ease   = t=>1-Math.pow(1-t,3);
+    function frame(now) {
+      const t = Math.min((now-t0)/dur,1);
+      const off = off0 + totalPx*ease(t);
+      const wrapped = ((off%(sLen*cellH))+sLen*cellH)%(sLen*cellH);
+      strip.style.transform=`translateY(-${wrapped}px)`;
+      if (t<1) requestAnimationFrame(frame);
+      else { strip.style.transform=`translateY(-${target*cellH}px)`; resolve(); }
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+// ════════════════════════════════════════════
+// FINISH SPIN
+// ════════════════════════════════════════════
+function finishSpin(results, won) {
+  spinning = false;
+  document.getElementById('spin-btn').disabled = false;
+  const emojis = results.map(i=>SYMBOLS[i].emoji).join(' ');
+  if (won && won.wildBonus) {
+    setMessage('🃏🃏🃏 THREE WILDS！进入解谜关卡！','win');
+    addHistory('🃏 THREE WILDS → Sort Puzzle!',true);
+    document.getElementById('machine').classList.add('winning');
+    setTimeout(()=>openSortPuzzle(), 800);
+  } else if (won) {
+    credits += won.amount; stats.wins++; stats.totalWon += won.amount;
+    document.getElementById('win-display').textContent = won.amount;
+    document.getElementById('machine').classList.add('winning');
+    const wt = won.hadWild?' 🃏Wild助攻！':'';
+    if (won.jackpot)      { setMessage(`🎉 JACKPOT！${emojis} +${won.amount}${wt}`,'win'); addHistory(`🎰 JACKPOT +${won.amount}`,true); }
+    else if (won.partial) { setMessage(`👍 两连！${emojis} +${won.amount}${wt}`,'win');     addHistory(`✓ ${emojis} +${won.amount}`,true); }
+    else                  { setMessage(`🎊 三连！${emojis} +${won.amount}！${wt}`,'win');   addHistory(`★ ${emojis} +${won.amount}`,true); }
+  } else {
+    const wilds  = results.filter(r=>r===WILD_IDX).length;
+    const empties= results.filter(r=>EMPTY_INDICES.includes(r)).length;
+    const suffix = empties ? ` — ⬜空格打断` : wilds ? ` — 差一点（${wilds}张Wild）` : '  — 未中奖';
+    setMessage(emojis+suffix,'lose');
+    addHistory(`✗ ${emojis} -${bet}`,false);
+  }
+  updateDisplay(); updateStats(); updateJackpot(); updateWildMeter(results);
+  if (credits < bet) { setMessage('💸 代币不足！请重置','lose'); stopAuto(); }
+}
+
+// ════════════════════════════════════════════
+// DISPLAY HELPERS
+// ════════════════════════════════════════════
+function updateDisplay() {
+  document.getElementById('credits').textContent = credits;
+  document.getElementById('bet-val').textContent = bet;
+  document.getElementById('jackpot-display').textContent = jackpot;
+}
+function updateStats() {
+  const wr = stats.spins ? (stats.wins/stats.spins*100).toFixed(1) : '-';
+  const ar = stats.totalBet ? (stats.totalWon/stats.totalBet*100).toFixed(1) : '-';
+  const pnl = credits - (+document.getElementById('init-credits-s').value);
+  document.getElementById('s-spins').textContent   = stats.spins;
+  document.getElementById('s-winrate').textContent = wr==='-'?'-%':wr+'%';
+  document.getElementById('s-rtp').textContent     = ar==='-'?'-%':ar+'%';
+  const el = document.getElementById('s-pnl');
+  el.textContent = (pnl>=0?'+':'')+pnl;
+  el.className = 'stat-value '+(pnl>0?'good':pnl<0?'bad':'');
+}
+function updateJackpot() {
+  const pct = Math.min(jackpot/(jackpotSeed*3)*100,100);
+  document.getElementById('jackpot-bar').style.width = pct+'%';
+  document.getElementById('jackpot-progress').textContent = `奖池: ${jackpot} (${pct.toFixed(0)}%)`;
+}
+function setMessage(text,cls) {
+  const el=document.getElementById('msg-bar');
+  el.textContent=text; el.className='message-bar '+cls;
+}
+function addHistory(text,win) {
+  const log=document.getElementById('history-log');
+  const d=document.createElement('div');
+  d.className=win?'win-entry':'lose-entry';
+  d.textContent=`[${stats.spins}] ${text}`;
+  log.insertBefore(d,log.firstChild);
+  if(log.children.length>50) log.removeChild(log.lastChild);
+}
+function updateWildMeter(results) {
+  const wilds=results.filter(r=>r===WILD_IDX).length;
+  for(let i=0;i<3;i++){
+    const pip=document.getElementById(`wpip${i}`);
+    pip.classList.toggle('filled',i<wilds);
+    pip.textContent = i<wilds?'🃏':'';
+  }
+}
+
+// ════════════════════════════════════════════
+// RNG VIZ
+// ════════════════════════════════════════════
+function initRNGViz() {
+  const viz=document.getElementById('rng-viz');
+  viz.innerHTML='';
+  for(let i=0;i<32;i++){const b=document.createElement('div');b.className='rng-bit';viz.appendChild(b);}
+}
+function animateRNG(results) {
+  const bits=document.querySelectorAll('.rng-bit');
+  let f=0;
+  const iv=setInterval(()=>{
+    bits.forEach(b=>b.classList.toggle('active',Math.random()>.5));
+    if(++f>15){
+      clearInterval(iv);
+      const bin=results.map(r=>r.toString(2).padStart(4,'0')).join('_');
+      document.getElementById('rng-result').textContent=`${bin} → [${results.map(r=>SYMBOLS[r].emoji).join(',')}]`;
+      bits.forEach((b,i)=>{const a=results.map(r=>r.toString(2).padStart(4,'0')).join('').split('');b.classList.toggle('active',a[i%a.length]==='1');});
+    }
+  },40);
+}
+
+// ════════════════════════════════════════════
+// AUTO SPIN
+// ════════════════════════════════════════════
+function startAuto(){autoSpin=true;function d(){if(!autoSpin||credits<bet){stopAuto();return;}spin();autoTimer=setTimeout(d,1800);}d();}
+function stopAuto(){autoSpin=false;clearTimeout(autoTimer);document.getElementById('toggle-auto').classList.remove('on');}
+
+// ════════════════════════════════════════════
+// SLIDER HELPER
+// ════════════════════════════════════════════
+function setupSlider(id, displayId, cb) {
+  const s=document.getElementById(id);
+  const d=displayId?document.getElementById(displayId):null;
+  const upd=()=>{
+    const min=+s.min,max=+s.max,val=+s.value;
+    s.style.setProperty('--pct',((val-min)/(max-min)*100).toFixed(1)+'%');
+    const out = cb?cb(val):val;
+    if(d) d.textContent=out;
+  };
+  s.addEventListener('input',upd); upd();
+}
+
+// ════════════════════════════════════════════
+// RESET
+// ════════════════════════════════════════════
+function resetGame(){
+  credits=+document.getElementById('init-credits-s').value;
+  bet=10; stats={spins:0,wins:0,totalBet:0,totalWon:0};
+  jackpot=2500;jackpotSeed=1000;
+  stopAuto(); updateDisplay(); updateStats(); updateJackpot();
+  setMessage('游戏已重置，好运！','');
+  document.getElementById('win-display').textContent='0';
+  document.getElementById('history-log').innerHTML='<div style="color:#443">--- 游戏重置 ---</div>';
+  initReelDOM();
+}
+
+// ══════════════════════════════════════════════════════════════
+// SORT PUZZLE — 颜色分类小游戏
+// 规则: 每管4格，把混色球按颜色归类（每管全同色 = 完成）
+// 奖励: bet * 5 * (剩余步数/最大步数) 基础奖励，通关额外+50%
+// ══════════════════════════════════════════════════════════════
+const BALL_COLORS = [
+  { bg: '#E63946', shine: '#FF8B94' }, // red
+  { bg: '#457B9D', shine: '#74C0E0' }, // blue
+  { bg: '#2D9E5F', shine: '#5FD68A' }, // green
+  { bg: '#E9C46A', shine: '#FFE599' }, // yellow
+  { bg: '#9B72CF', shine: '#C8A6FF' }, // purple
+  { bg: '#F4A261', shine: '#FFD0A0' }, // orange
+];
+const TUBE_CAPACITY = 4;
+
+let sortState = {
+  tubes: [],       // tubes[i] = array of color indices (bottom=0)
+  initTubes: [],   // for reset
+  history: [],     // for undo
+  movesLeft: 0,
+  maxMoves: 0,
+  selectedTube: -1,
+  active: false,
+  basePrize: 0,
+};
+
+function openSortPuzzle() {
+  stopAuto();
+  const numColors = 4; // 难度：4种颜色
+  const numTubes = numColors + 2; // 总管数 = 颜色数 + 2个空管
+  sortState.maxMoves = 20;
+  sortState.movesLeft = 20;
+  sortState.basePrize = bet * 5;
+  sortState.history = [];
+  sortState.selectedTube = -1;
+  sortState.active = true;
+
+  // 生成球：每种颜色 TUBE_CAPACITY 个
+  let balls = [];
+  for (let c = 0; c < numColors; c++) {
+    for (let k = 0; k < TUBE_CAPACITY; k++) balls.push(c);
+  }
+  // Fisher-Yates shuffle
+  for (let i = balls.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [balls[i], balls[j]] = [balls[j], balls[i]];
+  }
+
+  // Fill tubes (first numColors tubes get 4 balls each, rest empty)
+  sortState.tubes = [];
+  for (let t = 0; t < numTubes; t++) {
+    sortState.tubes.push(t < numColors ? balls.splice(0, TUBE_CAPACITY) : []);
+  }
+  sortState.initTubes = sortState.tubes.map(t => [...t]);
+
+  renderSortPuzzle();
+  document.getElementById('sort-overlay').classList.add('active');
+  document.getElementById('sort-result').textContent = '';
+  updateSortPrize();
+}
+
+function renderSortPuzzle() {
+  const container = document.getElementById('sort-tubes');
+  container.innerHTML = '';
+  sortState.tubes.forEach((tube, ti) => {
+    const tubeEl = document.createElement('div');
+    tubeEl.className = 'tube' +
+      (sortState.selectedTube === ti ? ' selected' : '') +
+      (isValidTarget(ti) ? ' valid-target' : '');
+    tubeEl.onclick = () => sortClick(ti);
+    // Render balls bottom-to-top (flex-direction: column-reverse)
+    tube.forEach(c => {
+      const ball = document.createElement('div');
+      ball.className = 'ball';
+      ball.style.background = BALL_COLORS[c].bg;
+      ball.style.boxShadow = `inset -3px -3px 6px rgba(0,0,0,0.3), inset 3px 3px 6px ${BALL_COLORS[c].shine}40`;
+      tubeEl.appendChild(ball);
+    });
+    // Empty slots (visual)
+    const empty = TUBE_CAPACITY - tube.length;
+    for (let e = 0; e < empty; e++) {
+      const slot = document.createElement('div');
+      slot.style.cssText = 'width:36px;height:36px;border-radius:50%;border:1px dashed rgba(255,255,255,0.06);flex-shrink:0';
+      tubeEl.appendChild(slot);
+    }
+    container.appendChild(tubeEl);
+  });
+  document.getElementById('sort-moves-left').textContent = sortState.movesLeft;
+}
+
+function isValidTarget(ti) {
+  if (sortState.selectedTube < 0) return false;
+  if (ti === sortState.selectedTube) return false;
+  const src = sortState.tubes[sortState.selectedTube];
+  const dst = sortState.tubes[ti];
+  if (src.length === 0) return false;
+  if (dst.length >= TUBE_CAPACITY) return false;
+  if (dst.length === 0) return true;
+  return dst[dst.length - 1] === src[src.length - 1];
+}
+
+function sortClick(ti) {
+  if (!sortState.active) return;
+  const tubes = sortState.tubes;
+
+  if (sortState.selectedTube < 0) {
+    // 选择来源管（非空）
+    if (tubes[ti].length === 0) return;
+    sortState.selectedTube = ti;
+    renderSortPuzzle();
+    return;
+  }
+
+  if (ti === sortState.selectedTube) {
+    // 取消选择
+    sortState.selectedTube = -1;
+    renderSortPuzzle();
+    return;
+  }
+
+  // 尝试移动
+  if (isValidTarget(ti)) {
+    sortState.history.push(sortState.tubes.map(t => [...t]));
+    const ball = tubes[sortState.selectedTube].pop();
+    tubes[ti].push(ball);
+    sortState.movesLeft--;
+    sortState.selectedTube = -1;
+    renderSortPuzzle();
+    updateSortPrize();
+    checkSortWin();
+  } else {
+    // 无效目标 → 改为选择新来源
+    sortState.selectedTube = tubes[ti].length > 0 ? ti : -1;
+    renderSortPuzzle();
+  }
+}
+
+function checkSortWin() {
+  const solved = sortState.tubes.every(tube =>
+    tube.length === 0 || (tube.length === TUBE_CAPACITY && tube.every(c => c === tube[0]))
+  );
+  if (solved) {
+    const prize = calcSortPrize(true);
+    credits += prize;
+    stats.totalWon += prize;
+    sortState.active = false;
+    document.getElementById('sort-result').textContent = `🎉 通关！获得 ${prize} 代币！`;
+    document.getElementById('sort-result').style.color = 'var(--green-win)';
+    updateDisplay(); updateStats();
+    setTimeout(() => {
+      document.getElementById('sort-overlay').classList.remove('active');
+      setMessage(`🧩 解谜通关！获得奖励 ${prize} 代币！`, 'win');
+      addHistory(`🧩 Sort Puzzle 通关 +${prize}`, true);
+    }, 1800);
+    return;
+  }
+  if (sortState.movesLeft <= 0) {
+    const prize = calcSortPrize(false);
+    if (prize > 0) credits += prize;
+    sortState.active = false;
+    document.getElementById('sort-result').textContent = prize > 0 ? `步数耗尽，安慰奖 ${prize} 代币` : '步数耗尽，未通关';
+    document.getElementById('sort-result').style.color = prize > 0 ? 'var(--gold)' : 'var(--red)';
+    if (prize > 0) { stats.totalWon += prize; updateDisplay(); updateStats(); }
+    setTimeout(() => {
+      document.getElementById('sort-overlay').classList.remove('active');
+      setMessage(prize > 0 ? `🧩 安慰奖 ${prize} 代币` : '🧩 解谜未通关，继续加油！', prize > 0 ? 'win' : 'lose');
+    }, 1500);
+  }
+}
+
+function calcSortPrize(cleared) {
+  const ratio = sortState.movesLeft / sortState.maxMoves;
+  let prize = Math.round(sortState.basePrize * ratio);
+  if (cleared) prize = Math.round(prize * 1.5);
+  return Math.max(prize, 0);
+}
+
+function updateSortPrize() {
+  document.getElementById('sort-prize-val').textContent = calcSortPrize(false) + '~' + calcSortPrize(true);
+}
+
+function sortUndo() {
+  if (sortState.history.length === 0) return;
+  sortState.tubes = sortState.history.pop();
+  sortState.movesLeft++;
+  sortState.selectedTube = -1;
+  renderSortPuzzle();
+  updateSortPrize();
+}
+
+function sortReset() {
+  sortState.tubes = sortState.initTubes.map(t => [...t]);
+  sortState.movesLeft = sortState.maxMoves;
+  sortState.history = [];
+  sortState.selectedTube = -1;
+  sortState.active = true;
+  renderSortPuzzle();
+  updateSortPrize();
+  document.getElementById('sort-result').textContent = '';
+}
+
+function sortSkip() {
+  sortState.active = false;
+  document.getElementById('sort-overlay').classList.remove('active');
+  setMessage('跳过解谜关卡', '');
+}
+
+// ── Wild pip meter ─────────────────────────────────────────────
+function updateWildMeter(results) {
+  const wilds = results.filter(r => r === WILD_IDX).length;
+  // 显示本轮wild数
+  for (let i = 0; i < 3; i++) {
+    const pip = document.getElementById(`wpip${i}`);
+    if (i < wilds) {
+      pip.classList.add('filled');
+      pip.textContent = '🃏';
+    } else {
+      pip.classList.remove('filled');
+      pip.textContent = '';
+    }
+  }
+}
+
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+function init() {
+  // Initial multiplier calculation
+  recalcMultipliers(0.96);
+  rebuildAll();
+  initRNGViz();
+  updateDisplay(); updateStats(); updateJackpot();
+
+  // Spin & bet
+  document.getElementById('spin-btn').addEventListener('click',()=>{ if(!spinning) spin(); });
+  document.getElementById('bet-up').addEventListener('click',()=>{
+    const opts=[5,10,25,50,100];const idx=opts.indexOf(bet);
+    if(idx<opts.length-1){bet=opts[idx+1];updateDisplay();}
+  });
+  document.getElementById('bet-down').addEventListener('click',()=>{
+    const opts=[5,10,25,50,100];const idx=opts.indexOf(bet);
+    if(idx>0){bet=opts[idx-1];updateDisplay();}
+  });
+  document.addEventListener('keydown',e=>{if(e.code==='Space'&&!spinning){e.preventDefault();spin();}});
+
+  // RTP slider
+  setupSlider('rtp-slider','rtp-val',v=>v+'%');
+  document.getElementById('rtp-slider').addEventListener('input', onRTPChange);
+
+  // Weight sliders — generate dynamically
+  const symInfo=[
+    {id:'w-cherry-s',  label:'🍒 Cherry',  init:8,  min:1},
+    {id:'w-bell-s',    label:'🔔 Bell',    init:6,  min:1},
+    {id:'w-lemon-s',   label:'🍋 Lemon',   init:7,  min:1},
+    {id:'w-star-s',    label:'⭐ Star',    init:4,  min:1},
+    {id:'w-grape-s',   label:'🍇 Grape',   init:6,  min:1},
+    {id:'w-diamond-s', label:'💎 Diamond', init:3,  min:1},
+    {id:'w-seven-s',   label:'7️⃣ Seven',  init:2,  min:1},
+  ];
+  const emptyInfo=[
+    {id:'w-empty1-s', label:'⬜ 空格1 权重', init:0},
+    {id:'w-empty2-s', label:'⬜ 空格2 权重', init:0},
+  ];
+  const wContainer = document.getElementById('weight-sliders');
+
+  // Normal symbol sliders
+  symInfo.forEach((s,i)=>{
+    const dispId = s.id.replace('-s','');
+    const row = document.createElement('div');
+    row.className='param-row';
+    row.innerHTML=`<div class="param-label"><span class="param-name">${s.label} 权重</span><span class="param-value" id="${dispId}">${s.init}</span></div><input type="range" id="${s.id}" min="${s.min}" max="15" value="${s.init}" step="1">`;
+    wContainer.appendChild(row);
+    weights[i] = s.init;
+  });
+
+  // Empty slot sliders (inserted between symbols visually)
+  const sep = document.createElement('div');
+  sep.style.cssText='font-size:.6rem;color:#443;font-family:"Share Tech Mono",monospace;margin:6px 0 4px;letter-spacing:.1em';
+  sep.textContent='── 空格（出现即不中奖）──';
+  wContainer.appendChild(sep);
+  emptyInfo.forEach((s,e)=>{
+    const dispId = s.id.replace('-s','');
+    const row = document.createElement('div');
+    row.className='param-row';
+    row.innerHTML=`<div class="param-label"><span class="param-name">${s.label}</span><span class="param-value" id="${dispId}">${s.init}</span></div><input type="range" id="${s.id}" min="0" max="10" value="${s.init}" step="1">`;
+    wContainer.appendChild(row);
+    emptyWeights[e] = s.init;
+  });
+
+  // Wire all sliders
+  [...symInfo,...emptyInfo].forEach(s=>{
+    const dispId=s.id.replace('-s','');
+    setupSlider(s.id, dispId);
+    document.getElementById(s.id).addEventListener('input', onWeightChange);
+  });
+
+  // Wild & reel sliders
+  setupSlider('w-wild-s','w-wild',v=>{WILD_WEIGHT_VAL=+v;onWeightChange();return v;});
+  setupSlider('reel-len-s','reel-len-val',v=>{reelLength=+v;initReelDOM();return v;});
+  setupSlider('init-credits-s','init-credits-val');
+
+  // Toggles
+  document.getElementById('toggle-rng').addEventListener('click',function(){
+    showRNG=!showRNG;this.classList.toggle('on',showRNG);
+    document.getElementById('rng-section').style.opacity=showRNG?'1':'0.3';
+  });
+  document.getElementById('toggle-auto').addEventListener('click',function(){
+    if(autoSpin) stopAuto();
+    else{autoSpin=true;this.classList.add('on');startAuto();}
+  });
+
+  // Recalc after dynamic weights set
+  recalcMultipliers(0.96);
+  rebuildAll();
+}
+
+init();
+</script>
+</body>
+</html>
