@@ -303,11 +303,11 @@
   <div class="panel-section">
     <h3>🎰 卷轴模式</h3>
     <div style="display:flex;gap:6px;margin-bottom:8px">
-      <button class="reel-mode-btn active" id="mode-random" onclick="setReelMode('random')" style="flex:1;text-align:center">🎲 随机</button>
-      <button class="reel-mode-btn" id="mode-fixed" onclick="setReelMode('fixed')" style="flex:1;text-align:center">📌 固定序列</button>
+      <button class="reel-mode-btn" id="mode-random" onclick="setReelMode('random')" style="flex:1;text-align:center">🎲 随机</button>
+      <button class="reel-mode-btn active" id="mode-fixed" onclick="setReelMode('fixed')" style="flex:1;text-align:center">📌 固定序列</button>
     </div>
     <!-- Fixed reel editor -->
-    <div class="fixed-reel-editor" id="fixed-reel-editor">
+    <div class="fixed-reel-editor visible" id="fixed-reel-editor">
       <div class="reel-editor-tabs">
         <div class="reel-tab active" id="rtab0" onclick="selectReelTab(0)">卷轴 1</div>
         <div class="reel-tab" id="rtab1" onclick="selectReelTab(1)">卷轴 2</div>
@@ -1181,8 +1181,9 @@ function updateWildMeter(results) {
 // ════════════════════════════════════════════
 // FIXED REEL MODE
 // ════════════════════════════════════════════
-let reelMode = 'random'; // 'random' | 'fixed'
-let fixedReels = [[], [], []]; // user-defined sequences per reel
+let reelMode = 'fixed'; // 'random' | 'fixed'
+let _defSeq = [0, 2, 1, 3, 5, 4, 6, 7, 1, 8, 9, 4];
+let fixedReels = [_defSeq.slice(), _defSeq.slice(), _defSeq.slice()];
 let currentReelTab = 0; // which reel is being edited
 
 // All placeable symbols (normal + empty + wild)
@@ -1308,7 +1309,9 @@ function applyFixedReels() {
 function init() {
   // Initial multiplier calculation
   recalcMultipliers(0.96);
+  reelMode = 'fixed';
   rebuildAll();
+  renderReelEditor();
   initRNGViz();
   updateDisplay(); updateStats(); updateJackpot();
 
