@@ -16,15 +16,15 @@
   body{background:var(--bg-deep);color:#EEE;font-family:'Noto Sans SC',sans-serif;min-height:100vh;overflow-x:hidden}
 
   /* ── LAYOUT: header / left / right ── */
-  .app{display:grid;grid-template-columns:1fr 380px;grid-template-rows:auto 1fr;min-height:100vh;max-width:1600px;margin:0 auto}
+  .app{display:grid;grid-template-columns:480px 1fr 340px;grid-template-rows:auto 1fr;min-height:100vh;max-width:1700px;margin:0 auto}
   .header{grid-column:1/-1;text-align:center;padding:16px 40px 10px;border-bottom:1px solid rgba(255,215,0,0.15)}
   .header h1{font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--gold-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.15em}
   .header .subtitle{font-size:.7rem;color:var(--text-dim);letter-spacing:.3em;font-family:'Share Tech Mono',monospace;margin-top:3px}
 
   /* ── LEFT COLUMN ── */
-  .game-area{padding:24px 16px 24px 28px;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto;gap:16px;align-items:start}
-  .game-col-left{display:flex;flex-direction:column;gap:12px;width:480px}
-  .game-col-right{display:flex;flex-direction:column;gap:12px}
+  .game-area{padding:20px 12px 20px 20px;display:flex;flex-direction:column;gap:10px;align-items:stretch}
+  .game-col-left{display:flex;flex-direction:column;gap:10px}
+  .game-col-right{display:none}
 
   /* machine */
   .machine{background:linear-gradient(160deg,#2A1A22,#0F080C);border:2px solid var(--gold-dark);border-radius:20px;padding:22px 28px 20px;box-shadow:0 0 60px rgba(180,100,0,.2),inset 0 1px 0 rgba(255,215,0,.3);width:100%;position:relative}
@@ -96,36 +96,34 @@
 
   /* ── RIGHT COLUMN ── */
   .right-panel{border-left:1px solid rgba(255,215,0,.1);background:rgba(10,6,12,.8);overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:14px}
-  .right-panel::-webkit-scrollbar{width:4px}
-  .right-panel::-webkit-scrollbar-thumb{background:rgba(255,215,0,.2);border-radius:2px}
   .panel-section{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px}
-  .panel-section h3{font-family:'Orbitron',monospace;font-size:.58rem;color:var(--gold-dark);letter-spacing:.3em;text-transform:uppercase;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid rgba(255,215,0,.08)}
+  .panel-section h3{font-family:'Orbitron',monospace;font-size:.72rem;color:var(--gold-dark);letter-spacing:.3em;text-transform:uppercase;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid rgba(255,215,0,.08)}
 
   /* sliders */
   .param-row{margin-bottom:11px}
   .param-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-  .param-name{font-size:.7rem;color:#AAA;font-family:'Share Tech Mono',monospace}
-  .param-value{font-family:'Orbitron',monospace;font-size:.75rem;color:var(--neon-blue)}
+  .param-name{font-size:.85rem;color:#AAA;font-family:'Share Tech Mono',monospace}
+  .param-value{font-family:'Orbitron',monospace;font-size:.9rem;color:var(--neon-blue)}
   input[type="range"]{width:100%;height:4px;-webkit-appearance:none;background:linear-gradient(90deg,var(--neon-blue) var(--pct,50%),#2A2030 var(--pct,50%));border-radius:2px;outline:none;cursor:pointer}
   input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;background:var(--neon-blue);border-radius:50%;box-shadow:0 0 7px rgba(0,200,255,.6)}
 
   /* mult input row */
-  .mult-row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px;margin-bottom:7px;font-size:.7rem}
+  .mult-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:.84rem}
   .mult-sym{font-size:1rem;text-align:center}
-  .mult-input{background:#0A0810;border:1px solid #2A2030;border-radius:6px;color:var(--gold);font-family:'Orbitron',monospace;font-size:.75rem;padding:3px 7px;width:70px;text-align:right}
+  .mult-input{background:#0A0810;border:1px solid #2A2030;border-radius:6px;color:var(--gold);font-family:'Orbitron',monospace;font-size:.88rem;padding:4px 8px;width:72px;text-align:right;flex-shrink:0}
   .mult-input:focus{outline:none;border-color:var(--gold-dark)}
-  .mult-prob{color:#554;font-family:'Share Tech Mono',monospace;font-size:.65rem;text-align:right}
+  .mult-prob{color:#665;font-family:'Share Tech Mono',monospace;font-size:.72rem;margin-left:auto;white-space:nowrap}
 
   /* prob table */
-  .prob-grid{display:grid;grid-template-columns:auto 1fr auto auto;gap:4px 10px;font-size:.67rem;font-family:'Share Tech Mono',monospace}
-  .col-h{color:var(--gold-dark);font-size:.57rem;letter-spacing:.1em;padding-bottom:3px;border-bottom:1px solid rgba(255,215,0,.08)}
+  .prob-grid{display:grid;grid-template-columns:auto 1fr auto auto;gap:6px 10px;font-size:.8rem;font-family:'Share Tech Mono',monospace}
+  .col-h{color:var(--gold-dark);font-size:.7rem;letter-spacing:.1em;padding-bottom:3px;border-bottom:1px solid rgba(255,215,0,.08)}
   .sym{color:#CCC}.prob{color:var(--neon-blue);text-align:right}.mult-d{color:var(--gold);text-align:right}.contrib{color:#887;text-align:right}
 
   /* stats */
   .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
   .stat-box{background:rgba(0,0,0,.3);border-radius:8px;padding:7px 10px;text-align:center}
-  .stat-label{font-size:.58rem;color:var(--text-dim);font-family:'Share Tech Mono',monospace;letter-spacing:.1em}
-  .stat-value{font-family:'Orbitron',monospace;font-size:.85rem;color:#EEE;margin-top:2px}
+  .stat-label{font-size:.72rem;color:var(--text-dim);font-family:'Share Tech Mono',monospace;letter-spacing:.1em}
+  .stat-value{font-family:'Orbitron',monospace;font-size:1rem;color:#EEE;margin-top:2px}
   .stat-value.good{color:var(--green-win)}.stat-value.bad{color:var(--red)}
 
   /* rng */
@@ -135,14 +133,14 @@
 
   /* toggles */
   .toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
-  .toggle-label{font-size:.7rem;color:#AAA;font-family:'Share Tech Mono',monospace}
+  .toggle-label{font-size:.84rem;color:#AAA;font-family:'Share Tech Mono',monospace}
   .toggle{width:34px;height:18px;background:#2A2030;border-radius:9px;position:relative;cursor:pointer;border:1px solid #444;transition:background .2s}
   .toggle.on{background:var(--neon-blue);border-color:var(--neon-blue)}
   .toggle::after{content:'';width:12px;height:12px;background:#FFF;border-radius:50%;position:absolute;top:2px;left:2px;transition:left .2s}
   .toggle.on::after{left:18px}
 
   /* history */
-  .history-log{max-height:90px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:.63rem;color:#665;line-height:1.8}
+  .history-log{max-height:100px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:.76rem;color:#665;line-height:1.8}
   .history-log .win-entry{color:var(--green-win)}.history-log .lose-entry{color:#443}
 
   /* ── SORT PUZZLE OVERLAY ── */
@@ -177,7 +175,7 @@
   .fixed-reel-editor{display:none;margin-top:10px}
   .fixed-reel-editor.visible{display:block}
   .reel-editor-tabs{display:flex;gap:5px;margin-bottom:8px}
-  .reel-tab{flex:1;padding:5px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:#776699;cursor:pointer;text-align:center;transition:all .15s}
+  .reel-tab{flex:1;padding:6px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:#776699;cursor:pointer;text-align:center;transition:all .15s}
   .reel-tab.active{background:rgba(0,204,255,.12);border-color:rgba(0,204,255,.4);color:var(--neon-blue)}
   .reel-sequence-wrap{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:8px}
   .reel-sequence{display:flex;flex-wrap:wrap;gap:4px;min-height:32px;margin-bottom:8px}
@@ -187,7 +185,15 @@
   .reel-sym-palette{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.05)}
   .palette-sym{width:28px;height:28px;border-radius:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;transition:all .12s}
   .palette-sym:hover{background:rgba(0,204,255,.15);border-color:rgba(0,204,255,.4)}
-  .reel-seq-info{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:#554;margin-bottom:4px}
+  .reel-seq-info{font-family:'Share Tech Mono',monospace;font-size:.74rem;color:#554;margin-bottom:5px}
+
+  /* ── RIGHT PANEL TAB NAV ── */
+  .rtab-nav{display:flex;gap:0;border-bottom:1px solid rgba(255,215,0,.15);margin-bottom:14px}
+  .rtab-nav-btn{flex:1;padding:10px 6px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.82rem;color:#665;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.06em}
+  .rtab-nav-btn:hover{color:#AAA}
+  .rtab-nav-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+  .rtab-pane{display:none;flex-direction:column;gap:14px}
+  .rtab-pane.active{display:flex}
   @media(max-width:900px){.app{grid-template-columns:1fr}.right-panel{border-left:none;border-top:1px solid rgba(255,215,0,.1)}.header h1{font-size:1.5rem}}
 </style>
 </head>
@@ -200,24 +206,13 @@
   <div class="subtitle">Classic Slot Machine · 经典老虎机</div>
 </header>
 
-<!-- LEFT: GAME + MECHANICS (two-column grid) -->
+<!-- LEFT: 机器列 -->
 <main class="game-area">
-
-<div class="game-col-left">
   <div class="machine" id="machine">
     <div class="credit-display">
-      <div class="display-panel">
-        <div class="label">CREDITS</div>
-        <div class="value" id="credits">1000</div>
-      </div>
-      <div class="display-panel win">
-        <div class="label">WIN</div>
-        <div class="value" id="win-display">0</div>
-      </div>
-      <div class="display-panel">
-        <div class="label">JACKPOT</div>
-        <div class="value" id="jackpot-display" style="color:#FFD700">2500</div>
-      </div>
+      <div class="display-panel"><div class="label">CREDITS</div><div class="value" id="credits">1000</div></div>
+      <div class="display-panel win"><div class="label">WIN</div><div class="value" id="win-display">0</div></div>
+      <div class="display-panel"><div class="label">JACKPOT</div><div class="value" id="jackpot-display" style="color:#FFD700">2500</div></div>
     </div>
     <div class="reels-frame">
       <div class="win-line"></div>
@@ -235,12 +230,11 @@
         <button class="bet-btn" id="bet-up">＋</button>
       </div>
       <button class="spin-btn" id="spin-btn">SPIN</button>
-      <button class="test-btn" onclick="openSortPuzzle()">🧪 测试关卡</button>
+      <div class="toggle" id="toggle-auto" title="自动旋转" style="margin-left:6px;flex-shrink:0"></div>
+      <span style="font-size:.62rem;color:#554;font-family:'Share Tech Mono',monospace;white-space:nowrap">AUTO</span>
     </div>
   </div>
-
   <div class="message-bar" id="msg-bar">拉动摇杆，挑战命运！</div>
-
   <div class="wild-meter">
     <span class="wild-label">🃏 WILD</span>
     <div class="wild-pips">
@@ -248,144 +242,99 @@
       <div class="wild-pip" id="wpip1"></div>
       <div class="wild-pip" id="wpip2"></div>
     </div>
-    <span class="wild-hint">三Wild同时出现 → 解谜关卡 → 赢代币</span>
+    <span class="wild-hint">三Wild → 解谜关卡</span>
+    <button class="test-btn" onclick="openSortPuzzle()" style="margin-left:auto;padding:4px 10px;font-size:.65rem">🧪 测试</button>
   </div>
-
   <div class="paytable">
     <h3>💰 赔付表 · Paytable</h3>
     <div class="paytable-grid" id="paytable-grid"></div>
   </div>
-
-</div><!-- /game-col-left -->
-
-<div class="game-col-right">
-  <!-- MECHANICS -->
-  <div class="mechanics-card">
-    <h3>🔬 工作原理</h3>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 20px">
-      <div class="mech-block">
-        <div class="mech-title">RNG · 随机数生成器</div>
-        <div class="mech-text">每次旋转为每个滚轮独立生成随机数，映射到符号位置。结果在「旋转」瞬间已确定，动画只是视觉呈现。</div>
-      </div>
-      <div class="mech-block">
-        <div class="mech-title">符号权重</div>
-        <div class="mech-text">每个符号在虚拟滚轮上占的格数不同。格数越多越容易出现，权重之比即为出现概率之比。</div>
-      </div>
-      <div class="mech-block">
-        <div class="mech-title">RTP · 返还率</div>
-        <div class="mech-text">理论RTP = Σ(三连概率 × 倍数)。调整权重或倍数后实时重算。</div>
-        <div class="rtp-bar-wrap"><div class="rtp-bar-fill" id="rtp-bar" style="width:96%"></div></div>
-        <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:.58rem;color:#554;font-family:'Share Tech Mono',monospace">
-          <span>玩家</span><span id="rtp-label">RTP 96%</span><span id="house-edge">庄家 4%</span>
-        </div>
-      </div>
-      <div class="mech-block">
-        <div class="mech-title">Wild 万能牌</div>
-        <div class="mech-text">🃏可替代任意符号。两Wild+一普通 = 三连。三Wild触发Sort Puzzle奖励关卡。</div>
-        <div class="mech-title" style="margin-top:8px">Jackpot · 奖池</div>
-        <div class="jackpot-bar"><div class="jackpot-fill" id="jackpot-bar" style="width:25%"></div></div>
-        <div style="font-size:.58rem;color:#554;font-family:'Share Tech Mono',monospace;margin-top:3px" id="jackpot-progress">奖池: 2500</div>
-      </div>
-      <div class="mech-block" style="grid-column:1/-1">
-        <div class="mech-title">⚠️ 赌徒谬误</div>
-        <div class="mech-text">每次旋转完全独立——前一次结果对下一次<strong style="color:#FF4466">毫无影响</strong>。PRNG对历史没有记忆，"连败必赢"是认知偏误。</div>
-      </div>
+  <div class="paytable" style="border-color:rgba(0,204,255,.15)">
+    <h3 style="color:var(--neon-blue)">🎲 快速模拟</h3>
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <button onclick="runSimulation(1000)"   style="flex:1;padding:7px;background:rgba(0,204,255,.07);border:1px solid rgba(0,204,255,.2);border-radius:7px;color:var(--neon-blue);font-family:'Share Tech Mono',monospace;font-size:.75rem;cursor:pointer">1K</button>
+      <button onclick="runSimulation(10000)"  style="flex:1;padding:7px;background:rgba(0,204,255,.12);border:1px solid rgba(0,204,255,.35);border-radius:7px;color:var(--neon-blue);font-family:'Share Tech Mono',monospace;font-size:.75rem;cursor:pointer;font-weight:700">10K</button>
+      <button onclick="runSimulation(100000)" style="flex:1;padding:7px;background:rgba(180,80,255,.07);border:1px solid rgba(180,80,255,.25);border-radius:7px;color:var(--purple);font-family:'Share Tech Mono',monospace;font-size:.75rem;cursor:pointer">100K</button>
     </div>
+    <div id="sim-stats" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:#887;margin-bottom:8px;min-height:18px"></div>
+    <div style="position:relative;height:140px"><canvas id="sim-chart" style="width:100%;height:140px"></canvas></div>
+    <div id="sim-legend" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:#665"></div>
   </div>
-
-</div><!-- /game-col-right -->
 </main>
 
-<!-- RIGHT: PARAMS + PROB + STATS -->
+<!-- MID: 权重+概率 -->
+<section class="mid-panel">
+  <div class="rtab-nav" style="margin-bottom:12px">
+    <div class="rtab-nav-btn active" id="rnav-weight" onclick="switchRTab('weight')">⚙️ 权重</div>
+    <div class="rtab-nav-btn"        id="rnav-theory" onclick="switchRTab('theory')">🔬 原理</div>
+  </div>
+  <div class="rtab-pane active" id="rpane-weight">
+
+    <!-- 上半：倍数 + 概率 并排 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start">
+
+      <!-- 左：倍数调节 -->
+      <div class="panel-section">
+        <h3>🎚️ 倍数</h3>
+        <div style="font-size:.72rem;color:#665;font-family:'Share Tech Mono',monospace;margin-bottom:8px">三连倍数 → RTP重算</div>
+        <div id="mult-inputs"></div>
+      </div>
+
+      <!-- 右：实时概率 -->
+      <div class="panel-section">
+        <h3>📊 实时概率</h3>
+        <div class="prob-grid" id="prob-grid">
+          <div class="col-h">符号</div><div class="col-h" style="text-align:right">概率</div><div class="col-h" style="text-align:right">倍数</div><div class="col-h" style="text-align:right">贡献</div>
+        </div>
+        <div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,215,0,.08);font-family:'Share Tech Mono',monospace;font-size:.78rem">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:#776699">理论 RTP</span><span style="color:var(--green-win);font-family:'Orbitron',monospace" id="rtp-total">--%</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#776699">Wild 贡献</span><span style="color:var(--purple)" id="wild-contrib">--%</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 下半：权重调节（全宽，滑块自然拉伸） -->
+    <div class="panel-section">
+      <h3>⚙️ 权重调节</h3>
+      <div style="font-size:.76rem;color:#665;font-family:'Share Tech Mono',monospace;margin-bottom:8px">权重 → 概率 → RTP 实时联动</div>
+      <div class="param-row"><div class="param-label"><span class="param-name">目标 RTP</span><span class="param-value" id="rtp-val">96%</span></div><input type="range" id="rtp-slider" min="50" max="99" value="96" step="1"></div>
+      <div id="weight-sliders"></div>
+      <div class="param-row" style="margin-top:4px"><div class="param-label"><span class="param-name">🃏 Wild 权重</span><span class="param-value" id="w-wild">2</span></div><input type="range" id="w-wild-s" min="0" max="8" value="2" step="1"></div>
+      <div class="param-row"><div class="param-label"><span class="param-name">滚轮密度</span><span class="param-value" id="reel-len-val">20</span></div><input type="range" id="reel-len-s" min="10" max="50" value="20" step="1"></div>
+      <div class="param-row"><div class="param-label"><span class="param-name">初始代币</span><span class="param-value" id="init-credits-val">1000</span></div><input type="range" id="init-credits-s" min="100" max="5000" value="1000" step="100"></div>
+      <div class="toggle-row"><span class="toggle-label">显示RNG过程</span><div class="toggle on" id="toggle-rng"></div></div>
+      <div style="margin-top:10px"><button onclick="resetGame()" style="width:100%;padding:9px;background:rgba(255,215,0,.07);border:1px solid var(--gold-dark);border-radius:8px;color:var(--gold);font-family:'Share Tech Mono',monospace;font-size:.82rem;cursor:pointer">↺ 重置</button></div>
+    </div>
+
+  </div>
+  <div class="rtab-pane" id="rpane-theory">
+    <div class="panel-section">
+      <h3>🔬 工作原理</h3>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="mech-block"><div class="mech-title">RNG · 随机数生成器</div><div class="mech-text">每次旋转为每个滚轮独立生成随机数，映射到符号位置。结果在「旋转」瞬间已确定，动画只是视觉呈现。</div></div>
+        <div class="mech-block"><div class="mech-title">符号权重</div><div class="mech-text">每个符号在虚拟滚轮上占的格数不同。格数越多越容易出现，权重之比即为出现概率之比。</div></div>
+        <div class="mech-block">
+          <div class="mech-title">RTP · 返还率</div>
+          <div class="mech-text">理论RTP = Σ(三连概率 × 倍数)。调整权重或倍数后实时重算。</div>
+          <div class="rtp-bar-wrap"><div class="rtp-bar-fill" id="rtp-bar" style="width:96%"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:.7rem;color:#554;font-family:'Share Tech Mono',monospace"><span>玩家</span><span id="rtp-label">RTP 96%</span><span id="house-edge">庄家 4%</span></div>
+        </div>
+        <div class="mech-block">
+          <div class="mech-title">Wild 万能牌</div>
+          <div class="mech-text">🃏可替代任意符号。两Wild+一普通 = 三连。三Wild触发Sort Puzzle奖励关卡。</div>
+          <div class="mech-title" style="margin-top:8px">Jackpot · 奖池</div>
+          <div class="jackpot-bar"><div class="jackpot-fill" id="jackpot-bar" style="width:25%"></div></div>
+          <div style="font-size:.7rem;color:#554;font-family:'Share Tech Mono',monospace;margin-top:3px" id="jackpot-progress">奖池: 2500</div>
+        </div>
+        <div class="mech-block"><div class="mech-title">⚠️ 赌徒谬误</div><div class="mech-text">每次旋转完全独立——前一次结果对下一次<strong style="color:#FF4466">毫无影响</strong>。PRNG对历史没有记忆。</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RIGHT: 统计 + 模式 + RNG + 历史 -->
 <aside class="right-panel">
-
-  <!-- ── 卷轴模式 (置顶) ── -->
-  <div class="panel-section">
-    <h3>🎰 卷轴模式</h3>
-    <div style="display:flex;gap:6px;margin-bottom:8px">
-      <button class="reel-mode-btn" id="mode-random" onclick="setReelMode('random')" style="flex:1;text-align:center">🎲 随机</button>
-      <button class="reel-mode-btn active" id="mode-fixed" onclick="setReelMode('fixed')" style="flex:1;text-align:center">📌 固定序列</button>
-    </div>
-    <!-- Fixed reel editor -->
-    <div class="fixed-reel-editor visible" id="fixed-reel-editor">
-      <div class="reel-editor-tabs">
-        <div class="reel-tab active" id="rtab0" onclick="selectReelTab(0)">卷轴 1</div>
-        <div class="reel-tab" id="rtab1" onclick="selectReelTab(1)">卷轴 2</div>
-        <div class="reel-tab" id="rtab2" onclick="selectReelTab(2)">卷轴 3</div>
-        <div class="reel-tab" style="flex:0.6;font-size:.58rem" id="rtab-sync" onclick="syncAllReels()">同步↓</div>
-      </div>
-      <div class="reel-sequence-wrap">
-        <div class="reel-seq-info" id="reel-seq-info">点击符号添加 · 点序列格子删除</div>
-        <div class="reel-sequence" id="reel-sequence"></div>
-        <div class="reel-sym-palette" id="reel-sym-palette"></div>
-      </div>
-      <div style="display:flex;gap:5px;margin-top:7px">
-        <button onclick="clearCurrentReel()" style="flex:1;padding:5px;background:rgba(255,50,50,.07);border:1px solid rgba(255,50,50,.2);border-radius:6px;color:#FF6688;font-family:'Share Tech Mono',monospace;font-size:.65rem;cursor:pointer">清空</button>
-        <button onclick="shuffleCurrentReel()" style="flex:1;padding:5px;background:rgba(0,204,255,.07);border:1px solid rgba(0,204,255,.2);border-radius:6px;color:var(--neon-blue);font-family:'Share Tech Mono',monospace;font-size:.65rem;cursor:pointer">随机排序</button>
-        <button onclick="applyFixedReels()" style="flex:1;padding:5px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);border-radius:6px;color:var(--green-win);font-family:'Share Tech Mono',monospace;font-size:.65rem;cursor:pointer">应用 ✓</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── 概率表 ── -->
-  <div class="panel-section">
-    <h3>📊 概率 · 期望</h3>
-    <div class="prob-grid" id="prob-grid">
-      <div class="col-h">符号</div><div class="col-h" style="text-align:right">三连概率</div><div class="col-h" style="text-align:right">倍数</div><div class="col-h" style="text-align:right">RTP贡献</div>
-    </div>
-    <div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,215,0,.08);font-family:'Share Tech Mono',monospace;font-size:.67rem">
-      <div style="display:flex;justify-content:space-between">
-        <span style="color:#776699">理论RTP</span>
-        <span style="color:var(--green-win);font-family:'Orbitron',monospace" id="rtp-total">--%</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:3px">
-        <span style="color:#776699">Wild期望贡献</span>
-        <span style="color:var(--purple)" id="wild-contrib">--%</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── 倍数调节 ── -->
-  <div class="panel-section">
-    <h3>🎚️ 倍数调节</h3>
-    <div style="font-size:.62rem;color:#554;font-family:'Share Tech Mono',monospace;margin-bottom:8px">手动输入各符号三连倍数 → RTP自动重算</div>
-    <div id="mult-inputs"></div>
-  </div>
-
-  <!-- ── 权重调节 ── -->
-  <div class="panel-section">
-    <h3>⚙️ 权重调节</h3>
-    <div style="font-size:.62rem;color:#554;font-family:'Share Tech Mono',monospace;margin-bottom:8px">权重变化 → 概率变化 → RTP自动重算</div>
-
-    <div class="param-row">
-      <div class="param-label"><span class="param-name">理论目标RTP</span><span class="param-value" id="rtp-val">96%</span></div>
-      <input type="range" id="rtp-slider" min="50" max="99" value="96" step="1">
-    </div>
-
-    <div id="weight-sliders"></div>
-
-    <div class="param-row" style="margin-top:4px">
-      <div class="param-label"><span class="param-name">🃏 Wild 权重（独立）</span><span class="param-value" id="w-wild">2</span></div>
-      <input type="range" id="w-wild-s" min="0" max="8" value="2" step="1">
-    </div>
-    <div class="param-row">
-      <div class="param-label"><span class="param-name">滚轮密度</span><span class="param-value" id="reel-len-val">20</span></div>
-      <input type="range" id="reel-len-s" min="10" max="50" value="20" step="1">
-    </div>
-    <div class="param-row">
-      <div class="param-label"><span class="param-name">初始代币</span><span class="param-value" id="init-credits-val">1000</span></div>
-      <input type="range" id="init-credits-s" min="100" max="5000" value="1000" step="100">
-    </div>
-
-    <div class="toggle-row"><span class="toggle-label">显示RNG过程</span><div class="toggle on" id="toggle-rng"></div></div>
-    <div class="toggle-row"><span class="toggle-label">自动旋转</span><div class="toggle" id="toggle-auto"></div></div>
-
-    <div style="display:flex;gap:8px;margin-top:8px">
-      <button onclick="resetGame()" style="flex:1;padding:7px;background:rgba(255,215,0,.07);border:1px solid var(--gold-dark);border-radius:8px;color:var(--gold);font-family:'Share Tech Mono',monospace;font-size:.7rem;cursor:pointer">↺ 重置</button>
-    </div>
-  </div>
-
-  <!-- ── 本局统计 ── -->
   <div class="panel-section">
     <h3>📈 本局统计</h3>
     <div class="stats-grid">
@@ -395,20 +344,40 @@
       <div class="stat-box"><div class="stat-label">盈亏</div><div class="stat-value" id="s-pnl">0</div></div>
     </div>
   </div>
-
-  <!-- ── RNG 可视化 ── -->
+  <div class="panel-section">
+    <h3>🎰 卷轴模式</h3>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <button class="reel-mode-btn" id="mode-random" onclick="setReelMode('random')" style="flex:1;text-align:center;padding:9px">🎲 随机</button>
+      <button class="reel-mode-btn active" id="mode-fixed" onclick="setReelMode('fixed')" style="flex:1;text-align:center;padding:9px">📌 固定</button>
+    </div>
+    <div class="fixed-reel-editor visible" id="fixed-reel-editor">
+      <div class="reel-editor-tabs">
+        <div class="reel-tab active" id="rtab0" onclick="selectReelTab(0)">卷轴1</div>
+        <div class="reel-tab" id="rtab1" onclick="selectReelTab(1)">卷轴2</div>
+        <div class="reel-tab" id="rtab2" onclick="selectReelTab(2)">卷轴3</div>
+        <div class="reel-tab" style="flex:0.6" id="rtab-sync" onclick="syncAllReels()">同步↓</div>
+      </div>
+      <div class="reel-sequence-wrap">
+        <div class="reel-seq-info" id="reel-seq-info">点符号添加 · 点格子删除</div>
+        <div class="reel-sequence" id="reel-sequence"></div>
+        <div class="reel-sym-palette" id="reel-sym-palette"></div>
+      </div>
+      <div style="display:flex;gap:5px;margin-top:7px">
+        <button onclick="clearCurrentReel()" style="flex:1;padding:6px;background:rgba(255,50,50,.07);border:1px solid rgba(255,50,50,.2);border-radius:6px;color:#FF6688;font-family:'Share Tech Mono',monospace;font-size:.75rem;cursor:pointer">清空</button>
+        <button onclick="shuffleCurrentReel()" style="flex:1;padding:6px;background:rgba(0,204,255,.07);border:1px solid rgba(0,204,255,.2);border-radius:6px;color:var(--neon-blue);font-family:'Share Tech Mono',monospace;font-size:.75rem;cursor:pointer">随机排序</button>
+        <button onclick="applyFixedReels()" style="flex:1;padding:6px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);border-radius:6px;color:var(--green-win);font-family:'Share Tech Mono',monospace;font-size:.75rem;cursor:pointer">应用 ✓</button>
+      </div>
+    </div>
+  </div>
   <div class="panel-section" id="rng-section">
     <h3>🎲 RNG 过程</h3>
     <div class="rng-viz" id="rng-viz"></div>
-    <div style="margin-top:6px;font-size:.63rem;color:#554;font-family:'Share Tech Mono',monospace" id="rng-result"></div>
+    <div style="margin-top:6px;font-size:.74rem;color:#554;font-family:'Share Tech Mono',monospace" id="rng-result"></div>
   </div>
-
-  <!-- ── 历史 ── -->
   <div class="panel-section">
     <h3>📜 历史记录</h3>
     <div class="history-log" id="history-log"><div style="color:#443">--- 开始游戏 ---</div></div>
   </div>
-
 </aside>
 </div>
 
@@ -793,29 +762,92 @@ function calcWin(results) {
 }
 
 // ════════════════════════════════════════════
-// REEL ANIMATION
+// REEL ANIMATION — 三段式：全速 → 抖动减速 → 弹性落定
 // ════════════════════════════════════════════
 function animateReel(reelIdx, targetSymbol) {
-  return new Promise(resolve=>{
-    const strip  = document.getElementById(`strip${reelIdx}`);
-    const sLen   = reelStrips[reelIdx].length;
-    const cellH  = 58;
-    const pos    = reelStrips[reelIdx].indexOf(targetSymbol);
-    const target = pos>=0 ? pos : 0;
-    const minSp  = 15+reelIdx*8+Math.floor(Math.random()*8);
-    const totalPx= (minSp+target)*cellH + sLen*cellH;
-    const dur    = 800+reelIdx*200+Math.random()*300;
-    const t0     = performance.now();
-    const off0   = sLen*cellH;
-    const ease   = t=>1-Math.pow(1-t,3);
-    function frame(now) {
-      const t = Math.min((now-t0)/dur,1);
-      const off = off0 + totalPx*ease(t);
-      const wrapped = ((off%(sLen*cellH))+sLen*cellH)%(sLen*cellH);
-      strip.style.transform=`translateY(-${wrapped}px)`;
-      if (t<1) requestAnimationFrame(frame);
-      else { strip.style.transform=`translateY(-${target*cellH}px)`; resolve(); }
+  return new Promise(resolve => {
+    const strip = document.getElementById(`strip${reelIdx}`);
+    const sLen  = reelStrips[reelIdx].length;
+    const cellH = 58;
+    const pos   = reelStrips[reelIdx].indexOf(targetSymbol);
+    const targetPos = pos >= 0 ? pos : 0;
+    const targetPx  = targetPos * cellH; // final resting px (no wrap offset)
+
+    // 总旋转圈数：全速段跑 N 整圈再对齐到目标
+    const fullLaps = 3 + reelIdx; // 第1轴3圈，第2轴4圈，第3轴5圈
+    const lapPx    = sLen * cellH;
+    // 全速段终点：对齐到 target 的上一整圈位置
+    const sprintEndPx = fullLaps * lapPx + targetPx;
+
+    // 时间分配
+    const sprintDur  = 600 + reelIdx * 180;   // 全速段时长 ms
+    const brakeDur   = 320 + reelIdx * 60;    // 抖动减速段
+    const bounceDur  = 180;                    // 弹性落定段
+    const totalDur   = sprintDur + brakeDur + bounceDur;
+
+    // 快到目标前多走一点再弹回（overshoot）
+    const overshoot  = cellH * 0.28;           // 超出 28% 格高再弹回
+
+    const t0 = performance.now();
+    let prevWrapped = sLen * cellH; // 起始偏移（第二圈开始，防止初始跳帧）
+
+    // easing helpers
+    const easeInOut = t => t < 0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+    const easeOutCubic = t => 1 - Math.pow(1-t, 3);
+    const easeOutBack  = t => { const c1=1.70158,c3=c1+1; return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2); };
+
+    // 抖动：减速段叠加一个渐消正弦
+    function jitter(t) {
+      // t: 0→1 in brake phase; amplitude fades out, frequency slows
+      const amp   = cellH * 0.06 * (1 - t);  // 最大抖 6% 格高，渐消
+      const freq  = 18 * (1 - t * 0.6);       // 频率从18降到7
+      return amp * Math.sin(t * Math.PI * freq);
     }
+
+    function frame(now) {
+      const elapsed = now - t0;
+      let offsetPx; // absolute px scrolled from start (not wrapped)
+
+      if (elapsed < sprintDur) {
+        // ── 阶段1: 全速（线性，偶有轻微加速感）
+        const t = elapsed / sprintDur;
+        offsetPx = sprintEndPx * easeInOut(Math.min(t, 1));
+
+      } else if (elapsed < sprintDur + brakeDur) {
+        // ── 阶段2: 减速 + 抖动
+        const t = (elapsed - sprintDur) / brakeDur;
+        // 位移从 sprintEndPx 继续走到 sprintEndPx + overshoot
+        const brakeTravel = overshoot;
+        offsetPx = sprintEndPx + brakeTravel * easeOutCubic(t);
+        // 叠加抖动（transform 额外偏移，不影响 offsetPx 基准）
+        const jitterPx = jitter(t);
+        // 直接写 transform，带抖动
+        const rawPx = offsetPx + jitterPx;
+        const wrapped = ((rawPx % lapPx) + lapPx) % lapPx;
+        strip.style.transform = `translateY(-${wrapped}px)`;
+        requestAnimationFrame(frame);
+        return;
+
+      } else {
+        // ── 阶段3: 弹性落定（从 overshoot 位置弹回目标）
+        const t = (elapsed - sprintDur - brakeDur) / bounceDur;
+        if (t >= 1) {
+          // 完全落定，snap 到精确位置
+          strip.style.transform = `translateY(-${targetPx}px)`;
+          resolve();
+          return;
+        }
+        // 从 sprintEndPx+overshoot 弹回到 sprintEndPx (=targetPx + fullLaps*lapPx)
+        const fromPx = sprintEndPx + overshoot;
+        const toPx   = sprintEndPx;
+        offsetPx = fromPx + (toPx - fromPx) * easeOutBack(t);
+      }
+
+      const wrapped = ((offsetPx % lapPx) + lapPx) % lapPx;
+      strip.style.transform = `translateY(-${wrapped}px)`;
+      requestAnimationFrame(frame);
+    }
+
     requestAnimationFrame(frame);
   });
 }
@@ -922,7 +954,7 @@ function animateRNG(results) {
 // AUTO SPIN
 // ════════════════════════════════════════════
 function startAuto(){autoSpin=true;function d(){if(!autoSpin||credits<bet){stopAuto();return;}spin();autoTimer=setTimeout(d,1800);}d();}
-function stopAuto(){autoSpin=false;clearTimeout(autoTimer);document.getElementById('toggle-auto').classList.remove('on');}
+function stopAuto(){autoSpin=false;clearTimeout(autoTimer);const _s=document.getElementById('toggle-auto');if(_s)_s.classList.remove('on');}
 
 // ════════════════════════════════════════════
 // SLIDER HELPER
@@ -1303,6 +1335,132 @@ function applyFixedReels() {
   document.getElementById('reel-seq-info').textContent = `已应用 ✓ (${reelStrips[0].length}格)`;
 }
 
+
+function switchRTab(name) {
+  ['weight','theory'].forEach(t => {
+    const nb=document.getElementById('rnav-'+t), pb=document.getElementById('rpane-'+t);
+    if(nb) nb.classList.toggle('active', t===name);
+    if(pb) pb.classList.toggle('active', t===name);
+  });
+}
+
+// ════════════════════════════════════════════
+// SIMULATION — 快速 N 次旋转概率分布
+// ════════════════════════════════════════════
+function simPickSymbol() {
+  const totalW = totalWeightSum();
+  let rand = Math.random() * totalW;
+  for (let k = 0; k < N_NORMAL; k++) { rand -= weights[k]; if (rand <= 0) return NORMAL_INDICES[k]; }
+  for (let e = 0; e < EMPTY_INDICES.length; e++) { rand -= emptyWeights[e]; if (rand <= 0) return EMPTY_INDICES[e]; }
+  return WILD_IDX;
+}
+
+function simCalcWin(r0, r1, r2) {
+  const results = [r0, r1, r2];
+  const wilds = results.filter(r => r === WILD_IDX).length;
+  if (wilds === 3) return { type: 'wildBonus', amount: 0 };
+  if (results.some(r => EMPTY_INDICES.includes(r))) return null;
+  const normals = results.filter(r => r !== WILD_IDX);
+  if (normals.length === 0) return null;
+  const eff = results.map(r => r === WILD_IDX ? normals[0] : r);
+  if (eff[0] === eff[1] && eff[1] === eff[2]) {
+    const k = NORMAL_INDICES.indexOf(eff[0]);
+    if (k < 0) return null;
+    const amt = isFinite(mults[k]) ? Math.round(bet * mults[k]) : 0;
+    return { type: SYMBOLS[eff[0]].name + (wilds > 0 ? '+W' : ''), amount: amt };
+  }
+  if (eff[0] === eff[1] || eff[1] === eff[2]) {
+    const si = eff[0] === eff[1] ? eff[0] : eff[1];
+    const k = NORMAL_INDICES.indexOf(si);
+    if (k < 0) return null;
+    const amt = isFinite(mults[k]) ? Math.round(bet * mults[k] * 0.3) : 0;
+    return { type: '两连', amount: amt };
+  }
+  return null;
+}
+
+function runSimulation(n) {
+  const t0 = performance.now();
+  let wins = 0, totalPayout = 0, totalBetSim = n * bet;
+  const typeCounts = {};
+
+  for (let i = 0; i < n; i++) {
+    const r0 = simPickSymbol(), r1 = simPickSymbol(), r2 = simPickSymbol();
+    const w = simCalcWin(r0, r1, r2);
+    if (w) {
+      wins++;
+      totalPayout += w.amount;
+      typeCounts[w.type] = (typeCounts[w.type] || 0) + 1;
+    } else {
+      typeCounts['未中奖'] = (typeCounts['未中奖'] || 0) + 1;
+    }
+  }
+
+  const elapsed = (performance.now() - t0).toFixed(0);
+  const winRate = (wins / n * 100).toFixed(2);
+  const simRTP  = (totalPayout / totalBetSim * 100).toFixed(2);
+
+  document.getElementById('sim-stats').innerHTML =
+    `模拟 <b style="color:#EEE">${n.toLocaleString()}</b> 次 · ` +
+    `胜率 <b style="color:var(--green-win)">${winRate}%</b> · ` +
+    `实际RTP <b style="color:var(--gold)">${simRTP}%</b> · ` +
+    `耗时 ${elapsed}ms`;
+
+  drawSimChart(typeCounts, n);
+}
+
+function drawSimChart(typeCounts, total) {
+  const canvas = document.getElementById('sim-chart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.offsetWidth, H = 160;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  ctx.scale(dpr, dpr);
+
+  ctx.clearRect(0, 0, W, H);
+
+  // 排序：未中奖排最后，其余按数量降序
+  const entries = Object.entries(typeCounts).sort((a, b) => {
+    if (a[0] === '未中奖') return 1;
+    if (b[0] === '未中奖') return -1;
+    return b[1] - a[1];
+  });
+
+  const barColors = ['#00FF88','#00CCFF','#FFD700','#CC88FF','#FF8C42','#FF2244','#5BC8F5','#A8E6CF'];
+  const padL = 8, padR = 8, padT = 14, padB = 32;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+  const barW = Math.max(4, chartW / entries.length - 4);
+  const maxVal = Math.max(...entries.map(e => e[1]));
+
+  entries.forEach(([type, count], i) => {
+    const x = padL + i * (chartW / entries.length) + (chartW / entries.length - barW) / 2;
+    const barH = (count / maxVal) * chartH;
+    const y = padT + chartH - barH;
+    const color = type === '未中奖' ? '#2A2030' : barColors[i % barColors.length];
+
+    // bar
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.roundRect(x, y, barW, barH, 3);
+    ctx.fill();
+
+    // pct label on top
+    const pct = (count / total * 100).toFixed(1);
+    ctx.fillStyle = type === '未中奖' ? '#443' : color;
+    ctx.font = `${Math.min(10, barW * 0.9)}px 'Share Tech Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(pct + '%', x + barW / 2, y - 3);
+  });
+
+  // x axis labels
+  const legend = document.getElementById('sim-legend');
+  legend.innerHTML = entries.map(([type, count], i) => {
+    const color = type === '未中奖' ? '#443' : barColors[i % barColors.length];
+    return `<span style="color:${color}">■ ${type} (${(count/total*100).toFixed(1)}%)</span>`;
+  }).join('');
+}
 // ════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════
@@ -1388,7 +1546,8 @@ function init() {
     showRNG=!showRNG;this.classList.toggle('on',showRNG);
     document.getElementById('rng-section').style.opacity=showRNG?'1':'0.3';
   });
-  document.getElementById('toggle-auto').addEventListener('click',function(){
+  const _at=document.getElementById('toggle-auto');
+  if(_at) _at.addEventListener('click',function(){
     if(autoSpin) stopAuto();
     else{autoSpin=true;this.classList.add('on');startAuto();}
   });
