@@ -167,6 +167,25 @@
   .sort-btn.primary:hover{background:rgba(180,80,255,.25)}
   .sort-result{text-align:center;margin-top:10px;font-family:'Orbitron',monospace;font-size:.88rem;min-height:22px;color:var(--green-win)}
 
+
+  /* ── FIXED REEL EDITOR ── */
+  .reel-mode-btn{background:rgba(0,204,255,.08);border:1px solid rgba(0,204,255,.3);border-radius:8px;padding:6px 14px;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--neon-blue);cursor:pointer;letter-spacing:.08em;transition:all .15s}
+  .reel-mode-btn:hover{background:rgba(0,204,255,.18)}
+  .reel-mode-btn.active{background:rgba(0,204,255,.22);border-color:var(--neon-blue);box-shadow:0 0 10px rgba(0,204,255,.2)}
+  .fixed-reel-editor{display:none;margin-top:10px}
+  .fixed-reel-editor.visible{display:block}
+  .reel-editor-tabs{display:flex;gap:5px;margin-bottom:8px}
+  .reel-tab{flex:1;padding:5px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:.65rem;color:#776699;cursor:pointer;text-align:center;transition:all .15s}
+  .reel-tab.active{background:rgba(0,204,255,.12);border-color:rgba(0,204,255,.4);color:var(--neon-blue)}
+  .reel-sequence-wrap{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:8px}
+  .reel-sequence{display:flex;flex-wrap:wrap;gap:4px;min-height:32px;margin-bottom:8px}
+  .seq-cell{width:28px;height:28px;border-radius:5px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;position:relative;transition:all .12s}
+  .seq-cell:hover{background:rgba(255,50,50,.15);border-color:rgba(255,50,50,.4)}
+  .seq-cell.dragging{opacity:.4}
+  .reel-sym-palette{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.05)}
+  .palette-sym{width:28px;height:28px;border-radius:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;transition:all .12s}
+  .palette-sym:hover{background:rgba(0,204,255,.15);border-color:rgba(0,204,255,.4)}
+  .reel-seq-info{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:#554;margin-bottom:4px}
   @media(max-width:900px){.app{grid-template-columns:1fr}.right-panel{border-left:none;border-top:1px solid rgba(255,215,0,.1)}.header h1{font-size:1.5rem}}
 </style>
 </head>
@@ -328,6 +347,35 @@
 
     <div style="display:flex;gap:8px;margin-top:8px">
       <button onclick="resetGame()" style="flex:1;padding:7px;background:rgba(255,215,0,.07);border:1px solid var(--gold-dark);border-radius:8px;color:var(--gold);font-family:'Share Tech Mono',monospace;font-size:.7rem;cursor:pointer">↺ 重置</button>
+    </div>
+
+    <!-- Reel mode toggle -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05)">
+      <span style="font-size:.68rem;color:#AAA;font-family:'Share Tech Mono',monospace">卷轴模式</span>
+      <div style="display:flex;gap:6px">
+        <button class="reel-mode-btn active" id="mode-random" onclick="setReelMode('random')">🎲 随机</button>
+        <button class="reel-mode-btn" id="mode-fixed" onclick="setReelMode('fixed')">📌 固定</button>
+      </div>
+    </div>
+
+    <!-- Fixed reel editor -->
+    <div class="fixed-reel-editor" id="fixed-reel-editor">
+      <div class="reel-editor-tabs">
+        <div class="reel-tab active" id="rtab0" onclick="selectReelTab(0)">卷轴 1</div>
+        <div class="reel-tab" id="rtab1" onclick="selectReelTab(1)">卷轴 2</div>
+        <div class="reel-tab" id="rtab2" onclick="selectReelTab(2)">卷轴 3</div>
+        <div class="reel-tab" style="flex:0.6;font-size:.58rem" id="rtab-sync" onclick="syncAllReels()">同步↓</div>
+      </div>
+      <div class="reel-sequence-wrap">
+        <div class="reel-seq-info" id="reel-seq-info">点击符号添加 · 点序列格子删除</div>
+        <div class="reel-sequence" id="reel-sequence"></div>
+        <div class="reel-sym-palette" id="reel-sym-palette"></div>
+      </div>
+      <div style="display:flex;gap:5px;margin-top:7px">
+        <button onclick="clearCurrentReel()" style="flex:1;padding:5px;background:rgba(255,50,50,.07);border:1px solid rgba(255,50,50,.2);border-radius:6px;color:#FF6688;font-family:'Share Tech Mono',monospace;font-size:.65rem;cursor:pointer">清空</button>
+        <button onclick="shuffleCurrentReel()" style="flex:1;padding:5px;background:rgba(0,204,255,.07);border:1px solid rgba(0,204,255,.2);border-radius:6px;color:var(--neon-blue);font-family:'Share Tech Mono',monospace;font-size:.65rem;cursor:pointer">随机排序</button>
+        <button onclick="applyFixedReels()" style="flex:1;padding:5px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);border-radius:6px;color:var(--green-win);font-family:'Share Tech Mono',monospace;font-size:.65rem;cursor:pointer">应用 ✓</button>
+      </div>
     </div>
   </div>
 
@@ -534,7 +582,11 @@ function buildReelStrip() {
 
 function initReelDOM() {
   for (let r = 0; r < 3; r++) {
-    reelStrips[r] = buildReelStrip();
+    if (reelMode === 'fixed' && fixedReels[r].length >= 3) {
+      reelStrips[r] = [...fixedReels[r]];
+    } else {
+      reelStrips[r] = buildReelStrip();
+    }
     const strip = document.getElementById(`strip${r}`);
     strip.innerHTML = '';
     [...reelStrips[r],...reelStrips[r],...reelStrips[r]].forEach(si => {
@@ -1118,6 +1170,131 @@ function updateWildMeter(results) {
   }
 }
 
+
+
+// ════════════════════════════════════════════
+// FIXED REEL MODE
+// ════════════════════════════════════════════
+let reelMode = 'random'; // 'random' | 'fixed'
+let fixedReels = [[], [], []]; // user-defined sequences per reel
+let currentReelTab = 0; // which reel is being edited
+
+// All placeable symbols (normal + empty + wild)
+function allPlaceable() {
+  return [
+    ...NORMAL_INDICES.map(si => ({ idx: si, emoji: SYMBOLS[si].emoji })),
+    ...EMPTY_INDICES.map(si => ({ idx: si, emoji: '⬜' })),
+    { idx: WILD_IDX, emoji: '🃏' },
+  ];
+}
+
+function setReelMode(mode) {
+  reelMode = mode;
+  document.getElementById('mode-random').classList.toggle('active', mode === 'random');
+  document.getElementById('mode-fixed').classList.toggle('active', mode === 'fixed');
+  document.getElementById('fixed-reel-editor').classList.toggle('visible', mode === 'fixed');
+  if (mode === 'fixed') {
+    // Init fixed reels from current random strips if empty
+    for (let r = 0; r < 3; r++) {
+      if (fixedReels[r].length === 0 && reelStrips[r].length > 0) {
+        fixedReels[r] = [...reelStrips[r]];
+      }
+    }
+    renderReelEditor();
+    applyFixedReels();
+  } else {
+    initReelDOM(); // rebuild random
+  }
+}
+
+function selectReelTab(r) {
+  currentReelTab = r;
+  for (let i = 0; i < 3; i++) {
+    document.getElementById(`rtab${i}`).classList.toggle('active', i === r);
+  }
+  renderReelEditor();
+}
+
+function renderReelEditor() {
+  const seq = fixedReels[currentReelTab];
+  const seqEl = document.getElementById('reel-sequence');
+  const infoEl = document.getElementById('reel-seq-info');
+  seqEl.innerHTML = '';
+  infoEl.textContent = `当前序列: ${seq.length} 格  · 点格子删除 · 点符号添加`;
+
+  seq.forEach((si, pos) => {
+    const cell = document.createElement('div');
+    cell.className = 'seq-cell';
+    cell.textContent = SYMBOLS[si].emoji;
+    cell.title = `位置${pos+1}: ${SYMBOLS[si].name} — 点击删除`;
+    cell.onclick = () => {
+      fixedReels[currentReelTab].splice(pos, 1);
+      renderReelEditor();
+    };
+    seqEl.appendChild(cell);
+  });
+
+  // Palette
+  const palette = document.getElementById('reel-sym-palette');
+  palette.innerHTML = '';
+  allPlaceable().forEach(({ idx, emoji }) => {
+    const btn = document.createElement('div');
+    btn.className = 'palette-sym';
+    btn.textContent = emoji;
+    btn.title = `添加 ${SYMBOLS[idx].name}`;
+    btn.onclick = () => {
+      fixedReels[currentReelTab].push(idx);
+      renderReelEditor();
+    };
+    palette.appendChild(btn);
+  });
+}
+
+function clearCurrentReel() {
+  fixedReels[currentReelTab] = [];
+  renderReelEditor();
+}
+
+function shuffleCurrentReel() {
+  const arr = fixedReels[currentReelTab];
+  for (let i = arr.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  renderReelEditor();
+}
+
+function syncAllReels() {
+  // Copy current reel to all others
+  for (let r = 0; r < 3; r++) {
+    if (r !== currentReelTab) fixedReels[r] = [...fixedReels[currentReelTab]];
+  }
+  document.getElementById('reel-seq-info').textContent = '已同步到三条卷轴 ✓';
+}
+
+function applyFixedReels() {
+  // Validate: each reel must have at least 3 symbols
+  for (let r = 0; r < 3; r++) {
+    if (fixedReels[r].length < 3) {
+      document.getElementById('reel-seq-info').textContent = `⚠️ 卷轴${r+1}至少需要3个符号`;
+      return;
+    }
+  }
+  for (let r = 0; r < 3; r++) {
+    reelStrips[r] = [...fixedReels[r]];
+    const stripEl = document.getElementById(`strip${r}`);
+    stripEl.innerHTML = '';
+    const cells = [...reelStrips[r], ...reelStrips[r], ...reelStrips[r]];
+    cells.forEach(si => {
+      const d = document.createElement('div');
+      d.className = 'reel-cell';
+      d.textContent = SYMBOLS[si].emoji;
+      stripEl.appendChild(d);
+    });
+    stripEl.style.transform = `translateY(-${reelStrips[r].length*58}px)`;
+  }
+  document.getElementById('reel-seq-info').textContent = `已应用 ✓ (${reelStrips[0].length}格)`;
+}
 
 // ════════════════════════════════════════════
 // INIT
